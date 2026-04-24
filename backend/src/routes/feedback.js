@@ -1,4 +1,5 @@
 const express = require('express');
+const { addFeedback } = require('../services/feedbackStore');
 
 const router = express.Router();
 
@@ -6,7 +7,7 @@ const VALID_SENTIMENTS = new Set(['positive', 'neutral', 'negative']);
 
 router.post('/', (req, res, next) => {
   try {
-    const { sentiment, message, sessionId } = req.body;
+    const { sentiment, message } = req.body;
 
     if (!sentiment || !VALID_SENTIMENTS.has(sentiment)) {
       return res.status(400).json({
@@ -15,16 +16,7 @@ router.post('/', (req, res, next) => {
       });
     }
 
-    // Anonymized logging only — no PII, no session data
-    const log = {
-      sentiment,
-      hasMessage: !!(message && message.trim().length > 0),
-      timestamp: new Date().toISOString(),
-    };
-
-    // In production, forward to analytics/Resend/Slack if needed
-    // For now, intentionally no storage per privacy policy
-    void log;
+    addFeedback({ sentiment, message });
 
     return res.status(200).json({ success: true });
   } catch (err) {

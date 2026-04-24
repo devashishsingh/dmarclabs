@@ -15,6 +15,12 @@ const EMOJI_OPTIONS: { sentiment: Sentiment; emoji: string; label: string }[] = 
   { sentiment: 'negative', emoji: '😞', label: 'Poor' },
 ];
 
+const PLACEHOLDER: Record<Sentiment, string> = {
+  positive: 'What did you like? (optional)',
+  neutral: 'What could be improved? (optional)',
+  negative: 'What went wrong? Your feedback helps us improve.',
+};
+
 export default function Feedback({ sessionId }: FeedbackProps) {
   const [selected, setSelected] = useState<Sentiment | null>(null);
   const [message, setMessage] = useState('');
@@ -24,13 +30,14 @@ export default function Feedback({ sessionId }: FeedbackProps) {
   if (submitted) {
     return (
       <p className="text-text-muted text-sm text-center py-2">
-        Thanks for the feedback!
+        Thanks for the feedback! 🙏
       </p>
     );
   }
 
   const handleSelect = (sentiment: Sentiment) => {
     setSelected(sentiment);
+    setMessage('');
   };
 
   const handleSubmit = async () => {
@@ -39,7 +46,7 @@ export default function Feedback({ sessionId }: FeedbackProps) {
     try {
       await submitFeedback(selected, message, sessionId);
     } catch {
-      // Non-critical — feedback submission failures are silent
+      // Non-critical — silent failure
     } finally {
       setSubmitted(true);
       setSubmitting(false);
@@ -70,14 +77,14 @@ export default function Feedback({ sessionId }: FeedbackProps) {
         ))}
       </div>
 
-      {selected === 'negative' && (
+      {selected && (
         <div className="w-full max-w-md space-y-3">
           <textarea
             rows={3}
             value={message}
             onChange={(e) => setMessage(e.target.value)}
-            placeholder="What went wrong? Your feedback helps us improve."
-            className="w-full rounded-md px-3 py-2 text-sm bg-background border border-border text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60"
+            placeholder={PLACEHOLDER[selected]}
+            className="w-full rounded-md px-3 py-2 text-sm bg-background border border-border text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60 resize-none"
             aria-label="Feedback message"
           />
           <button
@@ -85,19 +92,9 @@ export default function Feedback({ sessionId }: FeedbackProps) {
             disabled={submitting}
             className="w-full px-4 py-2 rounded-md bg-accent text-white text-sm font-medium hover:bg-accent-hover disabled:opacity-60 transition-colors"
           >
-            {submitting ? 'Sending…' : 'Send Feedback'}
+            {submitting ? 'Sending…' : 'Submit Feedback'}
           </button>
         </div>
-      )}
-
-      {selected && selected !== 'negative' && (
-        <button
-          onClick={handleSubmit}
-          disabled={submitting}
-          className="px-5 py-2 rounded-md bg-accent text-white text-sm font-medium hover:bg-accent-hover disabled:opacity-60 transition-colors"
-        >
-          {submitting ? 'Sending…' : 'Submit'}
-        </button>
       )}
     </div>
   );

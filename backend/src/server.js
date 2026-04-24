@@ -11,6 +11,7 @@ const purgeRouter = require('./routes/purge');
 const requestAccessRouter = require('./routes/requestAccess');
 const feedbackRouter = require('./routes/feedback');
 const contactRouter = require('./routes/contact');
+const adminRouter = require('./routes/admin');
 
 const app = express();
 
@@ -39,6 +40,7 @@ app.use('/api/purge', purgeRouter);
 app.use('/api/request-access', requestAccessRouter);
 app.use('/api/feedback', feedbackRouter);
 app.use('/api/contact', contactRouter);
+app.use('/api/admin', adminRouter);
 
 // --- Health check (Fly.io / uptime monitors) ---
 app.get('/health', (req, res) => {

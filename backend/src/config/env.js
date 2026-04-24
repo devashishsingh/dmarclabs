@@ -9,6 +9,7 @@ const config = {
   maxFileSizeMB: parseInt(process.env.MAX_FILE_SIZE_MB, 10) || 200,
   sessionTTL: parseInt(process.env.SESSION_TTL, 10) || 1800000, // 30 min
   rateLimit: parseInt(process.env.RATE_LIMIT, 10) || 10,
+  adminToken: process.env.ADMIN_TOKEN || '',
 };
 
 if (!config.resendApiKey && config.nodeEnv === 'production') {

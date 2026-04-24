@@ -22,6 +22,7 @@ import type { AnalysisStep } from '@/components/AnalysisTimeline';
 import Feedback from '@/components/Feedback';
 import { ToastContainer } from '@/components/Toast';
 import { useToast } from '@/lib/useToast';
+import { useHeaderVisibility } from '@/lib/headerVisibility';
 import { uploadFile, analyzeSession, purgeSession } from '@/lib/api';
 import type { AnalyzeResponse } from '@/lib/api';
 import { formatBytes, resultsToCSV, downloadCSV } from '@/lib/utils';
@@ -44,6 +45,7 @@ export default function HomePage() {
   const [showAccessForm, setShowAccessForm] = useState(false);
   const [oversizeFile, setOversizeFile] = useState<File | null>(null);
   const { toasts, dismiss, success: toastSuccess, warning: toastWarning, purge: toastPurge } = useToast();
+  const { hideHeader, showHeader } = useHeaderVisibility();
   const purgeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
   const warnTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
@@ -117,6 +119,7 @@ export default function HomePage() {
 
       setAnalysisData(result);
       setAppState('results');
+      hideHeader();
       setStatusMessage('');
       setRetryCount(0);
       toastSuccess('Analysis complete', `Found ${result.summary.totalIPs} sending IPs across ${result.summary.totalEmails.toLocaleString()} emails.`, 6000);
@@ -173,6 +176,7 @@ export default function HomePage() {
       setAnalysisData(null);
       setAppState('idle');
       setErrorMessage(null);
+      showHeader();
       scrollToUpload();
     }
   };
@@ -192,6 +196,7 @@ export default function HomePage() {
     setErrorMessage(null);
     setUploadProgress(0);
     setStatusMessage('');
+    showHeader();
     scrollToUpload();
   };
 

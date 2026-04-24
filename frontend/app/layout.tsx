@@ -2,6 +2,7 @@ import type { Metadata } from 'next';
 import Link from 'next/link';
 import './globals.css';
 import Header from '@/components/Header';
+import { HeaderVisibilityProvider } from '@/lib/headerVisibility';
 
 export const metadata: Metadata = {
   title: 'DMARC Labs — Fast, Private, Free DMARC Analyzer',
@@ -26,6 +27,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="en" className="dark">
       <body>
+        <HeaderVisibilityProvider>
         {/* Global background effects */}
         <div className="fixed inset-0 -z-10 pointer-events-none overflow-hidden" aria-hidden="true">
           <div className="absolute top-0 left-0 right-0 h-[600px] bg-gradient-to-b from-[#1a0505] to-transparent opacity-80" />
@@ -90,6 +92,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           </svg>
           <span className="whitespace-nowrap">Chat on WhatsApp</span>
         </a>
+        </HeaderVisibilityProvider>
       </body>
     </html>
   );

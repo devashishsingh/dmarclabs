@@ -2,6 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
+import { useHeaderVisibility } from '@/lib/headerVisibility';
 
 const NAV_LINKS = [
   { href: '/#upload', label: 'Analyzer' },
@@ -13,6 +14,7 @@ const NAV_LINKS = [
 
 export default function Header() {
   const pathname = usePathname();
+  const { headerHidden } = useHeaderVisibility();
 
   const handleLogoClick = (e: React.MouseEvent) => {
     if (pathname === '/') {
@@ -20,6 +22,8 @@ export default function Header() {
       window.dispatchEvent(new CustomEvent('dmarc:reset'));
     }
   };
+
+  if (headerHidden) return null;
 
   return (
     <header className="fixed top-0 left-0 right-0 z-50 pt-6 px-4 pointer-events-none">

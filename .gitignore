@@ -1,0 +1,36 @@
+# Dependencies
+node_modules/
+
+# Build outputs
+.next/
+out/
+dist/
+build/
+
+# Environment files
+.env
+.env.local
+.env.*.local
+
+# Logs
+*.log
+npm-debug.log*
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# Editor
+.vscode/
+*.swp
+*.swo
+
+# Superdesign / agent config
+.superdesign/
+frontend/.agents/
+frontend/.claude/
+frontend/.continue/
+frontend/skills-lock.json
+
+# Fly.io
+fly.toml

@@ -1,0 +1,16 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
+  <!-- Black background circle -->
+  <rect width="32" height="32" rx="8" fill="#000000"/>
+  <!-- Red ambient glow -->
+  <rect width="32" height="32" rx="8" fill="url(#glow)" opacity="0.4"/>
+  <!-- Red diamond (rotated square) -->
+  <rect x="9" y="9" width="14" height="14" rx="2" fill="#ef233c" transform="rotate(45 16 16)"/>
+  <!-- White inner diamond highlight -->
+  <rect x="13" y="13" width="6" height="6" rx="1" fill="white" opacity="0.15" transform="rotate(45 16 16)"/>
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="30%" r="60%">
+      <stop offset="0%" stop-color="#ef233c"/>
+      <stop offset="100%" stop-color="#000000"/>
+    </radialGradient>
+  </defs>
+</svg>

@@ -1,0 +1,104 @@
+'use client';
+
+import { useState } from 'react';
+import { submitFeedback } from '@/lib/api';
+
+interface FeedbackProps {
+  sessionId: string;
+}
+
+type Sentiment = 'positive' | 'neutral' | 'negative';
+
+const EMOJI_OPTIONS: { sentiment: Sentiment; emoji: string; label: string }[] = [
+  { sentiment: 'positive', emoji: '😍', label: 'Great' },
+  { sentiment: 'neutral', emoji: '😐', label: 'OK' },
+  { sentiment: 'negative', emoji: '😞', label: 'Poor' },
+];
+
+export default function Feedback({ sessionId }: FeedbackProps) {
+  const [selected, setSelected] = useState<Sentiment | null>(null);
+  const [message, setMessage] = useState('');
+  const [submitted, setSubmitted] = useState(false);
+  const [submitting, setSubmitting] = useState(false);
+
+  if (submitted) {
+    return (
+      <p className="text-text-muted text-sm text-center py-2">
+        Thanks for the feedback!
+      </p>
+    );
+  }
+
+  const handleSelect = (sentiment: Sentiment) => {
+    setSelected(sentiment);
+  };
+
+  const handleSubmit = async () => {
+    if (!selected) return;
+    setSubmitting(true);
+    try {
+      await submitFeedback(selected, message, sessionId);
+    } catch {
+      // Non-critical — feedback submission failures are silent
+    } finally {
+      setSubmitted(true);
+      setSubmitting(false);
+    }
+  };
+
+  return (
+    <div className="flex flex-col items-center gap-4 py-2">
+      <p className="text-text-muted text-sm">How was your experience?</p>
+
+      <div className="flex gap-4" role="group" aria-label="Feedback rating">
+        {EMOJI_OPTIONS.map(({ sentiment, emoji, label }) => (
+          <button
+            key={sentiment}
+            onClick={() => handleSelect(sentiment)}
+            aria-label={label}
+            aria-pressed={selected === sentiment}
+            className={[
+              'flex flex-col items-center gap-1 p-3 rounded-lg border transition-all min-w-[64px]',
+              selected === sentiment
+                ? 'border-accent bg-accent/10 scale-105'
+                : 'border-border hover:border-accent/50 hover:bg-card',
+            ].join(' ')}
+          >
+            <span className="text-2xl" aria-hidden="true">{emoji}</span>
+            <span className="text-xs text-text-muted">{label}</span>
+          </button>
+        ))}
+      </div>
+
+      {selected === 'negative' && (
+        <div className="w-full max-w-md space-y-3">
+          <textarea
+            rows={3}
+            value={message}
+            onChange={(e) => setMessage(e.target.value)}
+            placeholder="What went wrong? Your feedback helps us improve."
+            className="w-full rounded-md px-3 py-2 text-sm bg-background border border-border text-text-primary placeholder:text-text-muted focus:outline-none focus:ring-2 focus:ring-accent/50 focus:border-accent/60"
+            aria-label="Feedback message"
+          />
+          <button
+            onClick={handleSubmit}
+            disabled={submitting}
+            className="w-full px-4 py-2 rounded-md bg-accent text-white text-sm font-medium hover:bg-accent-hover disabled:opacity-60 transition-colors"
+          >
+            {submitting ? 'Sending…' : 'Send Feedback'}
+          </button>
+        </div>
+      )}
+
+      {selected && selected !== 'negative' && (
+        <button
+          onClick={handleSubmit}
+          disabled={submitting}
+          className="px-5 py-2 rounded-md bg-accent text-white text-sm font-medium hover:bg-accent-hover disabled:opacity-60 transition-colors"
+        >
+          {submitting ? 'Sending…' : 'Submit'}
+        </button>
+      )}
+    </div>
+  );
+}

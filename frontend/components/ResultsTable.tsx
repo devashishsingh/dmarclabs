@@ -122,8 +122,8 @@ export default function ResultsTable({ records }: ResultsTableProps) {
             <th className={`${groupHeader} border-l border-white/5`} colSpan={3}>
               <span className="text-accent">DMARC</span> Compliance
             </th>
-            <th className={`${groupHeader} border-l border-white/5`} colSpan={3}>SPF</th>
-            <th className={`${groupHeader} border-l border-white/5`} colSpan={3}>DKIM</th>
+            <th className={`${groupHeader} border-l border-white/5`} colSpan={4}>SPF</th>
+            <th className={`${groupHeader} border-l border-white/5`} colSpan={4}>DKIM</th>
             <th className={`${groupHeader} text-left border-l border-white/5`} colSpan={3}>Sender Intelligence</th>
           </tr>
           {/* Sub-headers */}
@@ -147,12 +147,14 @@ export default function ResultsTable({ records }: ResultsTableProps) {
             <th className={subHeader} onClick={() => handleSort('spf')}>
               <span className="inline-flex items-center gap-0.5 justify-end">Rate <SortIcon active={sortKey === 'spf'} dir={sortDir} /></span>
             </th>
+            <th className={`${subHeader} text-[9px] text-accent/80`} title="SPF alignment: policy_evaluated.spf — domain in From: header must match SPF envelope domain">Aligned</th>
             {/* DKIM */}
             <th className={`${subHeader} border-l border-white/5`}>Pass</th>
             <th className={subHeader}>Fail</th>
             <th className={subHeader} onClick={() => handleSort('dkim')}>
               <span className="inline-flex items-center gap-0.5 justify-end">Rate <SortIcon active={sortKey === 'dkim'} dir={sortDir} /></span>
             </th>
+            <th className={`${subHeader} text-[9px] text-accent/80`} title="DKIM alignment: policy_evaluated.dkim — DKIM d= domain must match From: header domain">Aligned</th>
             {/* Sender Intelligence */}
             <th className={`${subHeaderLeft} border-l border-white/5`}>Owner</th>
             <th className={subHeaderLeft}>Country</th>
@@ -188,10 +190,12 @@ export default function ResultsTable({ records }: ResultsTableProps) {
               <PassCell value={record.spf.pass} />
               <FailCell value={record.spf.fail} />
               <RateCell rate={record.spf.passRate} sortable active={sortKey === 'spf'} dir={sortDir} onSort={() => handleSort('spf')} />
+              <RateCell rate={record.spf.alignedRate ?? '—'} />
               {/* DKIM */}
               <PassCell value={record.dkim.pass} />
               <FailCell value={record.dkim.fail} />
               <RateCell rate={record.dkim.passRate} sortable active={sortKey === 'dkim'} dir={sortDir} onSort={() => handleSort('dkim')} />
+              <RateCell rate={record.dkim.alignedRate ?? '—'} />
               {/* Sender Intelligence */}
               <td className="px-2 py-2 text-xs text-text-muted max-w-[130px] truncate border-l border-white/5"
                 title={record.whois.owner}>

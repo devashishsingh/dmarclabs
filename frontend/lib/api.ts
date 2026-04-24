@@ -33,8 +33,8 @@ export interface IPRecord {
   ip: string;
   emailVolume: number;
   dmarc: { pass: number; fail: number; passRate: string };
-  spf: { pass: number; fail: number; passRate: string };
-  dkim: { pass: number; fail: number; passRate: string };
+  spf: { pass: number; fail: number; passRate: string; aligned?: number; alignedRate?: string };
+  dkim: { pass: number; fail: number; passRate: string; aligned?: number; alignedRate?: string };
   whois: WhoisData;
 }
 

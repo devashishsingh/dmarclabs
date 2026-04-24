@@ -71,8 +71,9 @@ export default function HomePage() {
       setSessionId(null);
       setAnalysisData(null);
       setAppState('idle');
+      showHeader();
     }, SESSION_TTL_MS);
-  }, [toastWarning, toastPurge]);
+  }, [toastWarning, toastPurge, showHeader]);
 
   const clearPurgeTimers = useCallback(() => {
     if (warnTimerRef.current) clearTimeout(warnTimerRef.current);

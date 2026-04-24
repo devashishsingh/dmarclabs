@@ -88,15 +88,22 @@ function extractRecords(parsed) {
     const dmarcPass = dmarcDkim === 'pass' || dmarcSpf === 'pass' ? count : 0;
     const dmarcFail = dmarcDkim !== 'pass' && dmarcSpf !== 'pass' ? count : 0;
 
-    // SPF result from auth_results
-    const spfResults = (authResults && authResults.spf) || [];
-    const spfPass = spfResults.some((s) => safeText(s.result) === 'pass') ? count : 0;
-    const spfFail = spfResults.some((s) => safeText(s.result) !== 'pass') ? count : 0;
+    // SPF alignment result from policy_evaluated (alignment-aware)
+    const spfAligned = dmarcSpf === 'pass' ? count : 0;
+    // DKIM alignment result from policy_evaluated (alignment-aware)
+    const dkimAligned = dmarcDkim === 'pass' ? count : 0;
 
-    // DKIM result from auth_results
+    // SPF raw auth result from auth_results
+    const spfResults = (authResults && authResults.spf) || [];
+    const spfHasPass = spfResults.some((s) => safeText(s.result) === 'pass');
+    const spfPass = spfHasPass ? count : 0;
+    const spfFail = spfHasPass ? 0 : count; // mutually exclusive with pass
+
+    // DKIM raw auth result from auth_results
     const dkimResults = (authResults && authResults.dkim) || [];
-    const dkimPass = dkimResults.some((d) => safeText(d.result) === 'pass') ? count : 0;
-    const dkimFail = dkimResults.some((d) => safeText(d.result) !== 'pass') ? count : 0;
+    const dkimHasPass = dkimResults.some((d) => safeText(d.result) === 'pass');
+    const dkimPass = dkimHasPass ? count : 0;
+    const dkimFail = dkimHasPass ? 0 : count; // mutually exclusive with pass
 
     if (ipMap.has(ip)) {
       const existing = ipMap.get(ip);
@@ -105,15 +112,17 @@ function extractRecords(parsed) {
       existing.dmarc.fail += dmarcFail;
       existing.spf.pass += spfPass;
       existing.spf.fail += spfFail;
+      existing.spf.aligned += spfAligned;
       existing.dkim.pass += dkimPass;
       existing.dkim.fail += dkimFail;
+      existing.dkim.aligned += dkimAligned;
     } else {
       ipMap.set(ip, {
         ip,
         emailVolume: count,
         dmarc: { pass: dmarcPass, fail: dmarcFail },
-        spf: { pass: spfPass, fail: spfFail },
-        dkim: { pass: dkimPass, fail: dkimFail },
+        spf: { pass: spfPass, fail: spfFail, aligned: spfAligned },
+        dkim: { pass: dkimPass, fail: dkimFail, aligned: dkimAligned },
       });
     }
   }
@@ -124,7 +133,9 @@ function extractRecords(parsed) {
     const total = entry.emailVolume || 1;
     entry.dmarc.passRate = formatPassRate(entry.dmarc.pass, total);
     entry.spf.passRate = formatPassRate(entry.spf.pass, total);
+    entry.spf.alignedRate = formatPassRate(entry.spf.aligned, total);
     entry.dkim.passRate = formatPassRate(entry.dkim.pass, total);
+    entry.dkim.alignedRate = formatPassRate(entry.dkim.aligned, total);
     records.push(entry);
   }
 

@@ -21,8 +21,8 @@ export async function POST(req: NextRequest) {
     if (!subject || !VALID_SUBJECTS.has(subject)) {
       return NextResponse.json({ error: 'VALIDATION', message: 'invalid subject' }, { status: 400 });
     }
-    if (!message || typeof message !== 'string' || message.trim().length < 10) {
-      return NextResponse.json({ error: 'VALIDATION', message: 'message must be at least 10 characters' }, { status: 400 });
+    if (!message || typeof message !== 'string' || message.trim().length < 3) {
+      return NextResponse.json({ error: 'VALIDATION', message: 'message must be at least 3 characters' }, { status: 400 });
     }
 
     const safeName = sanitize(name);

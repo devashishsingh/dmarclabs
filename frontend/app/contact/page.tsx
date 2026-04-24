@@ -6,6 +6,7 @@ import { Send, Mail, Github, Twitter } from 'lucide-react';
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
+  const [errorMessage, setErrorMessage] = useState<string>('Something went wrong. Please try again.');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -16,9 +17,11 @@ export default function ContactPage() {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
       });
-      if (!res.ok) throw new Error('Send failed');
+      const data = await res.json();
+      if (!res.ok) throw new Error(data.message || 'Send failed');
       setStatus('sent');
-    } catch {
+    } catch (err: unknown) {
+      setErrorMessage(err instanceof Error ? err.message : 'Something went wrong. Please try again.');
       setStatus('error');
     }
   };
@@ -169,7 +172,7 @@ export default function ContactPage() {
 
               {status === 'error' && (
                 <p role="alert" className="text-error text-sm rounded-lg bg-error/10 border border-error/30 px-4 py-3">
-                  Something went wrong. Please refresh the page and try again.
+                  {errorMessage}
                 </p>
               )}
 

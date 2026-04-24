@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import { Send, Github, Twitter } from 'lucide-react';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 export default function ContactPage() {
   const [form, setForm] = useState({ name: '', subject: '', message: '' });

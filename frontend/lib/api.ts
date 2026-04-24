@@ -1,6 +1,8 @@
 import axios from 'axios';
 
-const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+// API calls are proxied through Next.js rewrites → no CORS, no hardcoded backend URL.
+// In development set NEXT_PUBLIC_API_URL to override (e.g. http://localhost:8080).
+const API_URL = process.env.NEXT_PUBLIC_API_URL ?? '';
 
 const apiClient = axios.create({
   baseURL: API_URL,

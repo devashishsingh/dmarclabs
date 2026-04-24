@@ -49,11 +49,11 @@ function SortIcon({ active, dir }: { active: boolean; dir: SortDir }) {
 }
 
 function PassCell({ value }: { value: number }) {
-  return <td className="px-3 py-2.5 text-right text-sm font-mono text-success">{value.toLocaleString()}</td>;
+  return <td className="px-2 py-2 text-right text-xs font-mono text-success">{value.toLocaleString()}</td>;
 }
 
 function FailCell({ value }: { value: number }) {
-  return <td className="px-3 py-2.5 text-right text-sm font-mono"
+  return <td className="px-2 py-2 text-right text-xs font-mono"
     style={{ color: value > 0 ? '#ef233c' : 'var(--color-text-muted)' }}>
     {value.toLocaleString()}
   </td>;
@@ -63,11 +63,11 @@ function RateCell({ rate, sortable, active, dir, onSort }: {
   rate: string; sortable?: boolean; active?: boolean; dir?: SortDir; onSort?: () => void;
 }) {
   const cls = passRateClass(rate);
-  if (!sortable) return <td className={`px-3 py-2.5 text-right text-sm font-mono font-semibold ${cls}`}>{rate}</td>;
+  if (!sortable) return <td className={`px-2 py-2 text-right text-xs font-mono font-semibold ${cls}`}>{rate}</td>;
   return (
-    <td className={`px-3 py-2.5 text-right text-sm font-mono font-semibold ${cls} cursor-pointer select-none hover:opacity-80`}
+    <td className={`px-2 py-2 text-right text-xs font-mono font-semibold ${cls} cursor-pointer select-none hover:opacity-80`}
       onClick={onSort}>
-      <span className="inline-flex items-center gap-1 justify-end">
+      <span className="inline-flex items-center gap-0.5 justify-end">
         {rate}
         <SortIcon active={!!active} dir={dir!} />
       </span>
@@ -75,9 +75,9 @@ function RateCell({ rate, sortable, active, dir, onSort }: {
   );
 }
 
-const groupHeader = 'px-3 py-2 text-center text-[10px] font-bold uppercase tracking-widest text-text-muted border-b border-white/5';
-const subHeader = 'px-3 py-2 text-right text-[10px] font-semibold uppercase tracking-wider text-text-muted cursor-pointer select-none hover:text-text-primary transition-colors whitespace-nowrap';
-const subHeaderLeft = 'px-3 py-2 text-left text-[10px] font-semibold uppercase tracking-wider text-text-muted cursor-pointer select-none hover:text-text-primary transition-colors whitespace-nowrap';
+const groupHeader = 'px-2 py-1.5 text-center text-[9px] font-bold uppercase tracking-widest text-text-muted border-b border-white/5';
+const subHeader = 'px-2 py-1.5 text-right text-[9px] font-semibold uppercase tracking-wider text-text-muted cursor-pointer select-none hover:text-text-primary transition-colors whitespace-nowrap';
+const subHeaderLeft = 'px-2 py-1.5 text-left text-[9px] font-semibold uppercase tracking-wider text-text-muted cursor-pointer select-none hover:text-text-primary transition-colors whitespace-nowrap';
 
 export default function ResultsTable({ records }: ResultsTableProps) {
   const [sortKey, setSortKey] = useState<SortKey>('emailVolume');
@@ -92,7 +92,7 @@ export default function ResultsTable({ records }: ResultsTableProps) {
 
   return (
     <div className="w-full overflow-x-auto rounded-lg border border-border">
-      <table className="w-full border-collapse min-w-[1100px] text-sm" aria-label="DMARC analysis results">
+      <table className="w-full border-collapse text-xs" aria-label="DMARC analysis results">
         <thead className="bg-card sticky top-0 z-10">
           {/* Group headers */}
           <tr className="border-b border-border/50">
@@ -108,34 +108,34 @@ export default function ResultsTable({ records }: ResultsTableProps) {
           <tr className="border-b border-border">
             {/* Sender */}
             <th className={subHeaderLeft} onClick={() => handleSort('ip')}>
-              <span className="inline-flex items-center gap-1">IP Address <SortIcon active={sortKey === 'ip'} dir={sortDir} /></span>
+              <span className="inline-flex items-center gap-0.5">IP Address <SortIcon active={sortKey === 'ip'} dir={sortDir} /></span>
             </th>
             <th className={subHeader} onClick={() => handleSort('emailVolume')}>
-              <span className="inline-flex items-center gap-1 justify-end">Volume <SortIcon active={sortKey === 'emailVolume'} dir={sortDir} /></span>
+              <span className="inline-flex items-center gap-0.5 justify-end">Volume <SortIcon active={sortKey === 'emailVolume'} dir={sortDir} /></span>
             </th>
             {/* DMARC */}
             <th className={`${subHeader} border-l border-white/5`}>Pass</th>
             <th className={subHeader}>Fail</th>
             <th className={subHeader} onClick={() => handleSort('dmarc')}>
-              <span className="inline-flex items-center gap-1 justify-end">Rate <SortIcon active={sortKey === 'dmarc'} dir={sortDir} /></span>
+              <span className="inline-flex items-center gap-0.5 justify-end">Rate <SortIcon active={sortKey === 'dmarc'} dir={sortDir} /></span>
             </th>
             {/* SPF */}
             <th className={`${subHeader} border-l border-white/5`}>Pass</th>
             <th className={subHeader}>Fail</th>
             <th className={subHeader} onClick={() => handleSort('spf')}>
-              <span className="inline-flex items-center gap-1 justify-end">Rate <SortIcon active={sortKey === 'spf'} dir={sortDir} /></span>
+              <span className="inline-flex items-center gap-0.5 justify-end">Rate <SortIcon active={sortKey === 'spf'} dir={sortDir} /></span>
             </th>
             {/* DKIM */}
             <th className={`${subHeader} border-l border-white/5`}>Pass</th>
             <th className={subHeader}>Fail</th>
             <th className={subHeader} onClick={() => handleSort('dkim')}>
-              <span className="inline-flex items-center gap-1 justify-end">Rate <SortIcon active={sortKey === 'dkim'} dir={sortDir} /></span>
+              <span className="inline-flex items-center gap-0.5 justify-end">Rate <SortIcon active={sortKey === 'dkim'} dir={sortDir} /></span>
             </th>
             {/* Sender Intelligence */}
             <th className={`${subHeaderLeft} border-l border-white/5`}>Owner</th>
             <th className={subHeaderLeft}>Country</th>
             <th className={subHeader} onClick={() => handleSort('threat')}>
-              <span className="inline-flex items-center gap-1 justify-end">Threat <SortIcon active={sortKey === 'threat'} dir={sortDir} /></span>
+              <span className="inline-flex items-center gap-0.5 justify-end">Threat <SortIcon active={sortKey === 'threat'} dir={sortDir} /></span>
             </th>
           </tr>
         </thead>
@@ -148,11 +148,11 @@ export default function ResultsTable({ records }: ResultsTableProps) {
                 'hover:bg-accent/5',
               ].join(' ')}>
               {/* IP */}
-              <td className="px-3 py-2.5 font-mono text-sm text-text-primary whitespace-nowrap">
+              <td className="px-2 py-2 font-mono text-xs text-text-primary whitespace-nowrap">
                 <span className="flex items-center">{record.ip}<CopyButton text={record.ip} /></span>
               </td>
               {/* Volume */}
-              <td className="px-3 py-2.5 text-right font-mono text-text-primary font-medium">
+              <td className="px-2 py-2 text-right font-mono text-xs text-text-primary font-medium">
                 {record.emailVolume.toLocaleString()}
               </td>
               {/* DMARC */}
@@ -168,16 +168,16 @@ export default function ResultsTable({ records }: ResultsTableProps) {
               <FailCell value={record.dkim.fail} />
               <RateCell rate={record.dkim.passRate} sortable active={sortKey === 'dkim'} dir={sortDir} onSort={() => handleSort('dkim')} />
               {/* Sender Intelligence */}
-              <td className="px-3 py-2.5 text-sm text-text-muted max-w-[180px] truncate border-l border-white/5"
+              <td className="px-2 py-2 text-xs text-text-muted max-w-[160px] truncate border-l border-white/5"
                 title={record.whois.owner}>
                 {record.whois.owner}
               </td>
-              <td className="px-3 py-2.5 text-sm text-text-muted whitespace-nowrap">
+              <td className="px-2 py-2 text-xs text-text-muted whitespace-nowrap">
                 {record.whois.country}
               </td>
-              <td className="px-3 py-2.5 text-right">
+              <td className="px-2 py-2 text-right">
                 <span className={[
-                  'inline-flex items-center px-2 py-0.5 rounded-full text-[11px] font-semibold tracking-wide',
+                  'inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide',
                   threatBadgeClass(record.whois.threatLevel),
                 ].join(' ')}>
                   {record.whois.threatLevel}

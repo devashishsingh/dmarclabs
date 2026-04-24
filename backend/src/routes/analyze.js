@@ -83,7 +83,7 @@ router.post('/', async (req, res, next) => {
     recordScan({
       recordCount: enrichedRecords.length,
       fileSizeBytes: session.fileSize || 0,
-      processingMs,
+      processingMs: processingTime,
     });
 
     // Delete the upload from disk — privacy guarantee

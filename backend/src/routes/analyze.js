@@ -4,6 +4,7 @@ const path = require('path');
 const { getSession, storeResults, sessionExists } = require('../services/sessionManager');
 const { parseDMARCXML, computeSummary } = require('../services/dmarcParser');
 const { batchEnrich } = require('../services/whoisEnricher');
+const { recordScan, recordFailedScan } = require('../services/statsStore');
 
 const router = express.Router();
 
@@ -41,6 +42,7 @@ router.post('/', async (req, res, next) => {
     try {
       records = await parseDMARCXML(session.filePath);
     } catch (parseErr) {
+      recordFailedScan();
       return res.status(422).json({
         error: 'PARSE_FAILED',
         message: `Could not parse DMARC XML: ${parseErr.message}`,
@@ -48,6 +50,7 @@ router.post('/', async (req, res, next) => {
     }
 
     if (records.length === 0) {
+      recordFailedScan();
       return res.status(422).json({
         error: 'NO_RECORDS',
         message: 'The DMARC report contained no IP records',
@@ -75,6 +78,13 @@ router.post('/', async (req, res, next) => {
 
     // Step 4: Persist to session and clean up temp file
     const stored = storeResults(sessionId, summary, enrichedRecords);
+
+    // Record scan stats (no PII, no report content)
+    recordScan({
+      recordCount: enrichedRecords.length,
+      fileSizeBytes: session.fileSize || 0,
+      processingMs,
+    });
 
     // Delete the upload from disk — privacy guarantee
     try {

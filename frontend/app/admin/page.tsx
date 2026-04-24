@@ -29,6 +29,16 @@ interface ContactEntry {
   read: boolean;
 }
 
+interface ScanStats {
+  totalScans: number;
+  totalRecords: number;
+  failedScans: number;
+  avgProcessingMs: number;
+  avgFileSizeMB: number;
+  totalFileSizeMB: number;
+  dailyChart: { date: string; scans: number }[];
+}
+
 // ── Config ─────────────────────────────────────────────────────────────────────
 
 const SENTIMENT_CONFIG = {
@@ -112,7 +122,7 @@ function LoginScreen({
 export default function AdminPage() {
   const [authed, setAuthed] = useState(false);
   const [savedToken, setSavedToken] = useState('');
-  const [activeTab, setActiveTab] = useState<'feedback' | 'contact'>('contact');
+  const [activeTab, setActiveTab] = useState<'stats' | 'contact' | 'feedback'>('stats');
 
   // Feedback state
   const [feedbackData, setFeedbackData] = useState<{ summary: FeedbackSummary; entries: FeedbackEntry[] } | null>(null);
@@ -122,6 +132,9 @@ export default function AdminPage() {
   const [contactData, setContactData] = useState<{ unread: number; total: number; entries: ContactEntry[] } | null>(null);
   const [contactFilter, setContactFilter] = useState<'all' | 'unread'>('all');
   const [expandedContact, setExpandedContact] = useState<string | null>(null);
+
+  // Stats state
+  const [scanStats, setScanStats] = useState<ScanStats | null>(null);
 
   const [loading, setLoading] = useState(false);
 
@@ -145,21 +158,23 @@ export default function AdminPage() {
     async (token: string): Promise<string | null> => {
       setLoading(true);
       try {
-        const [fbRes, ctRes] = await Promise.all([
+        const [fbRes, ctRes, stRes] = await Promise.all([
           fetch(`${API_URL}/api/admin/feedback`, { headers: { Authorization: `Bearer ${token}` } }),
           fetch(`${API_URL}/api/admin/contact`, { headers: { Authorization: `Bearer ${token}` } }),
+          fetch(`${API_URL}/api/admin/stats`, { headers: { Authorization: `Bearer ${token}` } }),
         ]);
 
-        if (fbRes.status === 401 || ctRes.status === 401) {
+        if (fbRes.status === 401 || ctRes.status === 401 || stRes.status === 401) {
           return 'Invalid token. Please check your admin token and try again.';
         }
-        if (!fbRes.ok || !ctRes.ok) {
+        if (!fbRes.ok || !ctRes.ok || !stRes.ok) {
           return `Server error (${fbRes.status})`;
         }
 
-        const [fbJson, ctJson] = await Promise.all([fbRes.json(), ctRes.json()]);
+        const [fbJson, ctJson, stJson] = await Promise.all([fbRes.json(), ctRes.json(), stRes.json()]);
         setFeedbackData(fbJson);
         setContactData(ctJson);
+        setScanStats(stJson);
         return null;
       } catch {
         return 'Could not reach the server. Make sure the backend is running.';
@@ -187,6 +202,7 @@ export default function AdminPage() {
     setAuthed(false);
     setFeedbackData(null);
     setContactData(null);
+    setScanStats(null);
     setSavedToken('');
   };
 
@@ -242,6 +258,12 @@ export default function AdminPage() {
 
         {/* Tabs */}
         <div className="max-w-5xl mx-auto px-4 sm:px-6 flex gap-1 pb-0">
+          <TabButton active={activeTab === 'stats'} onClick={() => setActiveTab('stats')}>
+            Scans
+            {scanStats && (
+              <span className="ml-1.5 text-text-muted text-xs">({scanStats.totalScans})</span>
+            )}
+          </TabButton>
           <TabButton active={activeTab === 'contact'} onClick={() => setActiveTab('contact')}>
             Contact Messages
             {unreadCount > 0 && (
@@ -260,6 +282,9 @@ export default function AdminPage() {
       </header>
 
       <main className="max-w-5xl mx-auto px-4 sm:px-6 py-8">
+      {activeTab === 'stats' && scanStats && (
+          <StatsTab data={scanStats} />
+        )}
         {activeTab === 'contact' && contactData && (
           <ContactTab
             data={contactData}
@@ -304,6 +329,88 @@ function TabButton({
     >
       {children}
     </button>
+  );
+}
+
+// ── Stats tab ──────────────────────────────────────────────────────────────────
+
+function StatsTab({ data }: { data: ScanStats }) {
+  const maxScans = Math.max(...data.dailyChart.map((d) => d.scans), 1);
+
+  return (
+    <div className="space-y-8">
+      {/* KPI cards */}
+      <section>
+        <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-4">Overview</h2>
+        <div className="grid grid-cols-2 sm:grid-cols-3 gap-3">
+          <StatCard label="Total scans" value={data.totalScans} highlight={data.totalScans > 0} />
+          <StatCard label="IP records processed" value={data.totalRecords} />
+          <StatCard label="Failed scans" value={data.failedScans} />
+          <div className="bg-card border border-border rounded-xl p-4 space-y-1">
+            <p className="text-xs text-text-muted">Avg processing time</p>
+            <p className="text-2xl font-bold font-display text-text-primary">
+              {data.avgProcessingMs < 1000
+                ? `${data.avgProcessingMs}ms`
+                : `${(data.avgProcessingMs / 1000).toFixed(1)}s`}
+            </p>
+          </div>
+          <div className="bg-card border border-border rounded-xl p-4 space-y-1">
+            <p className="text-xs text-text-muted">Avg file size</p>
+            <p className="text-2xl font-bold font-display text-text-primary">{data.avgFileSizeMB} MB</p>
+          </div>
+          <div className="bg-card border border-border rounded-xl p-4 space-y-1">
+            <p className="text-xs text-text-muted">Total data processed</p>
+            <p className="text-2xl font-bold font-display text-text-primary">{data.totalFileSizeMB} MB</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Daily chart */}
+      <section className="bg-card border border-border rounded-xl p-5">
+        <h2 className="text-sm font-semibold text-text-muted uppercase tracking-wider mb-5">
+          Scans — last 30 days
+        </h2>
+        {data.totalScans === 0 ? (
+          <p className="text-sm text-text-muted text-center py-6">No scans recorded yet.</p>
+        ) : (
+          <div className="flex items-end gap-[3px] h-32">
+            {data.dailyChart.map(({ date, scans }) => {
+              const heightPct = scans > 0 ? Math.max(4, Math.round((scans / maxScans) * 100)) : 0;
+              const label = new Date(date + 'T00:00:00').toLocaleDateString(undefined, {
+                month: 'short',
+                day: 'numeric',
+              });
+              return (
+                <div
+                  key={date}
+                  className="flex-1 flex flex-col items-center justify-end gap-1 group relative"
+                  title={`${label}: ${scans} scan${scans !== 1 ? 's' : ''}`}
+                >
+                  <div
+                    className={`w-full rounded-sm transition-all ${scans > 0 ? 'bg-accent/70 group-hover:bg-accent' : 'bg-white/5'}`}
+                    style={{ height: scans > 0 ? `${heightPct}%` : '4px' }}
+                  />
+                  {/* Tooltip */}
+                  {scans > 0 && (
+                    <div className="absolute bottom-full mb-1.5 left-1/2 -translate-x-1/2 hidden group-hover:flex flex-col items-center z-10 pointer-events-none">
+                      <div className="bg-card border border-border rounded px-2 py-1 text-xs text-text-primary whitespace-nowrap shadow-lg">
+                        {label}: <span className="font-semibold text-accent">{scans}</span>
+                      </div>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </section>
+
+      {data.totalScans === 0 && (
+        <p className="text-xs text-text-muted text-center">
+          Stats are recorded from this moment forward — in-memory only, reset on server restart.
+        </p>
+      )}
+    </div>
   );
 }
 

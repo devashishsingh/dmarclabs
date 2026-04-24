@@ -1,6 +1,7 @@
 const express = require('express');
 const { getAllFeedback, getSummary } = require('../services/feedbackStore');
 const { getAllContacts, getUnreadCount, markRead } = require('../services/contactStore');
+const { getStats } = require('../services/statsStore');
 const config = require('../config/env');
 
 const router = express.Router();
@@ -16,6 +17,11 @@ function requireAdminToken(req, res, next) {
   }
   next();
 }
+
+// GET /api/admin/stats
+router.get('/stats', requireAdminToken, (req, res) => {
+  return res.status(200).json(getStats());
+});
 
 // GET /api/admin/feedback
 router.get('/feedback', requireAdminToken, (req, res) => {

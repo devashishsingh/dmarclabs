@@ -1,21 +1,65 @@
 const xml2js = require('xml2js');
 const { Readable } = require('stream');
+const zlib = require('zlib');
+const path = require('path');
+const AdmZip = require('adm-zip');
+
+/**
+ * Decompresses a .gz buffer using zlib.
+ */
+function decompressGzip(buf) {
+  return new Promise((resolve, reject) => {
+    zlib.gunzip(buf, (err, result) => {
+      if (err) reject(new Error(`gzip decompression failed: ${err.message}`));
+      else resolve(result);
+    });
+  });
+}
+
+/**
+ * Extracts the first .xml file from a .zip buffer.
+ */
+function extractZip(buf) {
+  const zip = new AdmZip(buf);
+  const entries = zip.getEntries();
+  // Find the first xml entry (may be nested in a folder)
+  const xmlEntry = entries.find((e) => e.entryName.toLowerCase().endsWith('.xml') && !e.isDirectory);
+  if (!xmlEntry) {
+    throw new Error('No .xml file found inside the ZIP archive');
+  }
+  return xmlEntry.getData();
+}
 
 /**
  * Parses a DMARC aggregate XML report (rua) from a file path or buffer.
+ * Handles .xml, .gz (gzip-compressed xml), and .zip archives.
  * Returns an array of enriched record objects ready for WHOIS lookup.
  */
 async function parseDMARCXML(input) {
-  let xmlData;
+  let rawBuf;
+  let filePath;
 
   if (typeof input === 'string') {
-    // input is a file path — read via stream to handle large files
     const fs = require('fs');
-    xmlData = await streamToBuffer(fs.createReadStream(input));
+    filePath = input;
+    rawBuf = await streamToBuffer(fs.createReadStream(input));
   } else if (Buffer.isBuffer(input)) {
-    xmlData = input;
+    rawBuf = input;
   } else {
     throw new Error('Invalid input: expected file path or Buffer');
+  }
+
+  // Decompress if needed
+  let xmlData;
+  const ext = filePath ? path.extname(filePath).toLowerCase() : '';
+
+  if (ext === '.gz') {
+    xmlData = await decompressGzip(rawBuf);
+  } else if (ext === '.zip') {
+    xmlData = extractZip(rawBuf);
+  } else {
+    // Plain .xml — or unknown; attempt direct parse
+    xmlData = rawBuf;
   }
 
   const parser = new xml2js.Parser({

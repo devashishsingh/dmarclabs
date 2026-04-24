@@ -123,7 +123,7 @@ export default function FileUpload({ onFileAccepted, onFileTooLarge, disabled }:
           </button>
 
           <p className="mt-2 text-text-muted text-[10px] font-mono uppercase tracking-[0.2em]">
-            XML &bull; GZ &bull; ZIP &mdash; up to 100 MB
+            XML &bull; GZ &bull; ZIP &mdash; up to 200 MB
           </p>
         </div>
       </div>

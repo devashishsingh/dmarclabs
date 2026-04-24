@@ -153,7 +153,7 @@ export default function OgImage() {
             {[
               ['&lt;5s', 'avg analysis time'],
               ['100%', 'private'],
-              ['Forever', 'free up to 100 MB'],
+              ['Forever', 'free up to 200 MB'],
             ].map(([stat, label]) => (
               <div
                 key={label}

@@ -216,7 +216,7 @@ export default function HomePage() {
               <span className="font-bold text-text-primary">100%</span> private
             </div>
             <div className="flex items-center gap-2 text-[13px] font-mono text-text-secondary border border-white/10 rounded-full px-4 py-1.5 bg-white/[0.03]">
-              <span className="font-bold text-text-primary">Forever</span> free up to 100 MB
+              <span className="font-bold text-text-primary">Forever</span> free up to 200 MB
             </div>
           </div>
         </div>
@@ -278,7 +278,7 @@ export default function HomePage() {
               onClick={() => setShowAccessForm(true)}
               className="text-xs text-text-muted hover:text-accent transition-colors underline underline-offset-4 decoration-white/10 hover:decoration-accent/50"
             >
-              Need to analyze files &gt;100 MB? Request access
+              Need to analyze files &gt;200 MB? Request access
             </button>
           </div>
         </div>
@@ -438,7 +438,7 @@ const HOW_IT_WORKS = [
     step: '01',
     icon: FileSearch,
     title: 'Upload your report',
-    body: 'Drag and drop any DMARC aggregate (rua) XML report — or a .gz / .zip archive. Files up to 100 MB are supported, processed client-side before upload.',
+    body: 'Drag and drop any DMARC aggregate (rua) XML report — or a .gz / .zip archive. Files up to 200 MB are supported, processed client-side before upload.',
   },
   {
     step: '02',

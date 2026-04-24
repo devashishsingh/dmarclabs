@@ -200,8 +200,8 @@ export default function AnalysisTimeline({
   const STEPS: StepState[] = [
     {
       id: 'upload',
-      label: uploadLabel ?? 'Uploading report',
-      description: 'Sending file to analysis server…',
+      label: uploadLabel ?? 'Memory processing',
+      description: 'Processing file data in memory — nothing is written to disk…',
       icon: <Upload className="h-4 w-4" />,
       estimateSec: 0,
     },

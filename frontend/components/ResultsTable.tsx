@@ -91,7 +91,29 @@ export default function ResultsTable({ records }: ResultsTableProps) {
   const sorted = sortRecords(records, sortKey, sortDir);
 
   return (
-    <div className="w-full overflow-x-auto rounded-lg border border-border">
+    <div className="w-full space-y-3">
+      {/* Threat level legend */}
+      <div className="flex flex-wrap items-center gap-x-5 gap-y-2 px-1">
+        <span className="text-[10px] font-semibold uppercase tracking-widest text-text-muted">Threat key:</span>
+        <span className="flex items-center gap-1.5 text-[11px] text-text-secondary">
+          <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide bg-success/20 text-success border border-success/30">TRUSTED</span>
+          Well-known legitimate sender (Google, Microsoft, your ESP)
+        </span>
+        <span className="flex items-center gap-1.5 text-[11px] text-text-secondary">
+          <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide bg-accent/20 text-accent border border-accent/30">NEUTRAL</span>
+          Registered IP — not flagged, but not specifically verified
+        </span>
+        <span className="flex items-center gap-1.5 text-[11px] text-text-secondary">
+          <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide bg-error/20 text-error border border-error/30">SUSPICIOUS</span>
+          Associated with flagged ASNs, open proxies, or known bad actors
+        </span>
+        <span className="flex items-center gap-1.5 text-[11px] text-text-secondary">
+          <span className="inline-flex items-center px-1.5 py-0.5 rounded-full text-[10px] font-semibold tracking-wide bg-slate-700 text-slate-400 border border-slate-600">UNKNOWN</span>
+          WHOIS lookup returned no usable owner information
+        </span>
+      </div>
+
+      <div className="overflow-x-auto rounded-lg border border-border">
       <table className="w-full border-collapse text-xs" aria-label="DMARC analysis results">
         <thead className="bg-card sticky top-0 z-10">
           {/* Group headers */}
@@ -190,6 +212,7 @@ export default function ResultsTable({ records }: ResultsTableProps) {
           ))}
         </tbody>
       </table>
+    </div>
     </div>
   );
 }

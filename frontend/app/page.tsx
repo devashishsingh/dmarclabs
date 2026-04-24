@@ -92,13 +92,13 @@ export default function HomePage() {
     setAppState('uploading');
     setUploadProgress(0);
     setErrorMessage(null);
-    setStatusMessage(`Uploading ${file.name}…`);
+    setStatusMessage(`Memory processing: ${file.name}…`);
     setActiveStep('upload');
 
     try {
       const upload = await uploadFile(file, (percent) => {
         setUploadProgress(percent);
-        setStatusMessage(`Uploading ${file.name}… ${formatBytes(Math.round((file.size * percent) / 100))} / ${formatBytes(file.size)}`);
+        setStatusMessage(`Memory processing… ${formatBytes(Math.round((file.size * percent) / 100))} / ${formatBytes(file.size)}`);
       });
 
       setSessionId(upload.sessionId);

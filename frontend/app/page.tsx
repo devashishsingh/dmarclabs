@@ -202,7 +202,7 @@ export default function HomePage() {
   };
 
   return (
-    <div className="flex-1 w-full max-w-layout mx-auto px-6 pt-32 pb-16 space-y-10">
+    <div className="flex-1 w-full max-w-layout mx-auto px-4 sm:px-6 pt-24 sm:pt-32 pb-16 space-y-8 sm:space-y-10">
       {/* Announcement bar — idle only */}
       {appState === 'idle' && (
         <div className="flex justify-center md:justify-start">
@@ -216,22 +216,22 @@ export default function HomePage() {
       {/* Hero */}
       {appState === 'idle' && (
         <div className="space-y-4">
-          <h1 className="text-5xl md:text-6xl font-semibold text-text-primary tracking-tight leading-[1.1] font-display">
-            Stop Guessing Who&apos;s Sending<br className="hidden md:block" /> From Your{' '}
+          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-text-primary tracking-tight leading-[1.1] font-display">
+            Stop Guessing Who&apos;s Sending<br className="hidden sm:block" /> From Your{' '}
             <span className="text-accent">Domain.</span>
           </h1>
-          <p className="text-text-muted text-lg max-w-xl leading-relaxed">
+          <p className="text-text-muted text-base sm:text-lg max-w-xl leading-relaxed">
             Stop drowning in XML reports and WHOIS lookups.
             DMARC Labs gives you verified sender intelligence in seconds — no signup, no credit card.
           </p>
-          <div className="flex flex-wrap gap-3 pt-1">
-            <div className="flex items-center gap-2 text-[13px] font-mono text-text-secondary border border-white/10 rounded-full px-4 py-1.5 bg-white/[0.03]">
+          <div className="flex flex-wrap gap-2 sm:gap-3 pt-1">
+            <div className="flex items-center gap-2 text-[12px] sm:text-[13px] font-mono text-text-secondary border border-white/10 rounded-full px-3 sm:px-4 py-1.5 bg-white/[0.03]">
               <span className="font-bold text-accent">&lt;5s</span> average analysis time
             </div>
-            <div className="flex items-center gap-2 text-[13px] font-mono text-text-secondary border border-white/10 rounded-full px-4 py-1.5 bg-white/[0.03]">
+            <div className="flex items-center gap-2 text-[12px] sm:text-[13px] font-mono text-text-secondary border border-white/10 rounded-full px-3 sm:px-4 py-1.5 bg-white/[0.03]">
               <span className="font-bold text-text-primary">100%</span> private
             </div>
-            <div className="flex items-center gap-2 text-[13px] font-mono text-text-secondary border border-white/10 rounded-full px-4 py-1.5 bg-white/[0.03]">
+            <div className="flex items-center gap-2 text-[12px] sm:text-[13px] font-mono text-text-secondary border border-white/10 rounded-full px-3 sm:px-4 py-1.5 bg-white/[0.03]">
               <span className="font-bold text-text-primary">Forever</span> free up to 200 MB
             </div>
           </div>
@@ -240,7 +240,7 @@ export default function HomePage() {
 
       {/* Feature pills — shown only on idle */}
       {appState === 'idle' && (
-        <div className="flex flex-wrap gap-3">
+        <div className="flex flex-wrap gap-2 sm:gap-3">
           {[
             { icon: Lock, text: 'Data deleted after analysis' },
             { icon: BarChart2, text: 'Export results as CSV' },
@@ -248,38 +248,17 @@ export default function HomePage() {
           ].map(({ icon: Icon, text }) => (
             <span
               key={text}
-              className="flex items-center gap-2.5 text-xs text-text-muted border border-white/10 rounded-full px-4 py-2 bg-white/[0.02] backdrop-blur-sm"
+              className="flex items-center gap-2 sm:gap-2.5 text-xs text-text-muted border border-white/10 rounded-full px-3 sm:px-4 py-2 bg-white/[0.02] backdrop-blur-sm"
             >
-              <Icon className="h-3.5 w-3.5 text-accent" aria-hidden="true" />
+              <Icon className="h-3.5 w-3.5 text-accent flex-shrink-0" aria-hidden="true" />
               {text}
             </span>
           ))}
         </div>
       )}
 
-      {/* Demo preview — shown only on idle */}
-      {appState === 'idle' && (
-        <div className="rounded-2xl border border-white/10 bg-card overflow-hidden shadow-2xl">
-          <div className="flex items-center justify-between px-4 py-2.5 border-b border-white/5 bg-white/[0.02]">
-            <span className="text-[11px] font-semibold uppercase tracking-widest text-text-muted">Live demo</span>
-            <span className="inline-flex items-center gap-1.5 text-[11px] text-text-muted">
-              <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse" aria-hidden="true" />
-              Upload → Analyze → Results
-            </span>
-          </div>
-          <div className="relative">
-            {/* Red glow behind the GIF */}
-            <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent pointer-events-none z-10" aria-hidden="true" />
-            <img
-              src="/demo.gif"
-              alt="DMARC Labs demo: drag and drop an XML report, watch it parse and enrich each IP with WHOIS data, then explore the results table"
-              className="w-full h-auto block"
-              loading="lazy"
-              decoding="async"
-            />
-          </div>
-        </div>
-      )}
+      {/* How It Works — shown only on idle, above upload */}
+      {appState === 'idle' && <HowItWorks />}
 
       {/* Upload zone */}
       {(appState === 'idle' || appState === 'error') && (
@@ -452,10 +431,6 @@ export default function HomePage() {
         />
       )}
 
-      {/* How it works — shown only on idle */}
-      {appState === 'idle' && <ProblemSection />}
-      {appState === 'idle' && <HowItWorks />}
-
       {/* Toast notifications */}
       <ToastContainer toasts={toasts} onDismiss={dismiss} />
     </div>
@@ -496,123 +471,75 @@ const HOW_IT_WORKS = [
 
 function HowItWorks() {
   return (
-    <section className="space-y-8 pt-4 border-t border-white/5" aria-labelledby="how-it-works-heading">
+    <section className="space-y-6 pt-4 border-t border-white/5" aria-labelledby="how-it-works-heading">
+      {/* Heading */}
       <div className="space-y-1">
-        <h2 id="how-it-works-heading" className="text-2xl font-semibold font-display text-text-primary tracking-tight">
+        <h2 id="how-it-works-heading" className="text-xl sm:text-2xl font-semibold font-display text-text-primary tracking-tight">
           How it works
         </h2>
-        <p className="text-text-muted text-sm max-w-lg">
-          No account needed. No data stored. Just actionable DMARC intelligence in seconds.
+        <p className="text-text-muted text-sm max-w-xl leading-relaxed">
+          Upload your DMARC XML report and get instant, human-readable sender intelligence — no account, no data stored, zero cost.
         </p>
       </div>
 
-      <div className="grid sm:grid-cols-3 gap-4">
+      {/* Demo GIF */}
+      <div className="rounded-2xl border border-white/10 bg-card overflow-hidden shadow-2xl">
+        <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 border-b border-white/5 bg-white/[0.02]">
+          <span className="text-[11px] font-semibold uppercase tracking-widest text-text-muted">Live walkthrough</span>
+          <span className="inline-flex items-center gap-1.5 text-[11px] text-text-muted">
+            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse flex-shrink-0" aria-hidden="true" />
+            Upload → Analyze → Results
+          </span>
+        </div>
+        <div className="relative">
+          <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent pointer-events-none z-10" aria-hidden="true" />
+          <img
+            src="/demo.gif"
+            alt="DMARC Labs demo: drag and drop an XML report, watch it parse and enrich each IP with WHOIS data, then explore the results table"
+            className="w-full h-auto block"
+            loading="lazy"
+            decoding="async"
+          />
+        </div>
+      </div>
+
+      {/* 3-step cards */}
+      <div className="grid sm:grid-cols-3 gap-3 sm:gap-4">
         {HOW_IT_WORKS.map(({ step, icon: Icon, title, body }) => (
           <div
             key={step}
-            className="rounded-2xl border border-white/10 bg-card p-6 space-y-4 hover:border-accent/20 transition-colors group"
+            className="rounded-2xl border border-white/10 bg-card p-5 sm:p-6 space-y-4 hover:border-accent/20 transition-colors group"
           >
             <div className="flex items-start justify-between">
-              <div className="w-10 h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent group-hover:bg-accent/20 transition-colors">
-                <Icon className="h-5 w-5" aria-hidden="true" />
+              <div className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-accent/10 flex items-center justify-center text-accent group-hover:bg-accent/20 transition-colors">
+                <Icon className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
               </div>
               <span className="font-mono text-[11px] text-text-muted border border-white/5 rounded-full px-2 py-0.5">{step}</span>
             </div>
             <div className="space-y-1.5">
-              <h3 className="font-semibold font-display text-text-primary text-base">{title}</h3>
-              <p className="text-text-muted text-sm leading-relaxed">{body}</p>
+              <h3 className="font-semibold font-display text-text-primary text-sm sm:text-base">{title}</h3>
+              <p className="text-text-muted text-xs sm:text-sm leading-relaxed">{body}</p>
             </div>
           </div>
         ))}
       </div>
 
       {/* Trust signals */}
-      <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
         {[
           { icon: Lock, label: 'Zero persistence', desc: 'Files are never written to disk' },
           { icon: ShieldCheck, label: 'GDPR compliant', desc: 'In-memory only, no cookies' },
           { icon: Clock, label: 'Auto-purge', desc: 'Sessions deleted after 30 min' },
           { icon: Zap, label: 'Sub-5s analysis', desc: 'Parallel WHOIS enrichment' },
         ].map(({ icon: Icon, label, desc }) => (
-          <div key={label} className="flex items-start gap-3 rounded-xl border border-white/5 bg-white/[0.02] px-4 py-3">
+          <div key={label} className="flex items-start gap-2.5 sm:gap-3 rounded-xl border border-white/5 bg-white/[0.02] px-3 sm:px-4 py-3">
             <Icon className="h-4 w-4 text-accent mt-0.5 flex-shrink-0" aria-hidden="true" />
             <div>
               <p className="text-xs font-semibold text-text-primary">{label}</p>
-              <p className="text-[11px] text-text-muted mt-0.5">{desc}</p>
+              <p className="text-[11px] text-text-muted mt-0.5 leading-relaxed">{desc}</p>
             </div>
           </div>
         ))}
-      </div>
-    </section>
-  );
-}
-
-function ProblemSection() {
-  const problems = [
-    {
-      title: 'XML reports are unreadable',
-      body: 'DMARC aggregate reports are raw XML files. Opening one reveals hundreds of nested records, IP addresses, and authentication codes — not a human-readable format.',
-    },
-    {
-      title: 'You have no idea who is sending email as you',
-      body: 'Unknown IPs in your DMARC report could be legitimate services you forgot about, phishing actors, or spoofing attempts. Without WHOIS data, you can\'t tell.',
-    },
-    {
-      title: 'Existing tools cost money or require a login',
-      body: 'Most DMARC analysers are enterprise products. Even "free" tiers require an account, collect your data, or cap your report size.',
-    },
-    {
-      title: 'Your email provider charges for detailed analytics',
-      body: 'Detailed sender reputation and delivery analysis is often locked behind paid tiers — even though you already own the reports.',
-    },
-    {
-      title: 'A misconfigured DMARC policy goes unnoticed for months',
-      body: 'Without checking your reports regularly, a broken SPF record or rogue sending source can silently fail authentication — eroding your domain reputation.',
-    },
-  ];
-
-  return (
-    <section className="space-y-8">
-      <div className="space-y-2">
-        <p className="text-[11px] font-mono uppercase tracking-widest text-accent font-semibold">The Problem</p>
-        <h2 className="text-3xl md:text-4xl font-semibold text-text-primary font-display tracking-tight leading-[1.15]">
-          Your domain is being impersonated.<br className="hidden md:block" />{' '}
-          <span className="text-text-secondary">Right now. Probably.</span>
-        </h2>
-        <p className="text-text-muted max-w-2xl text-base leading-relaxed">
-          DMARC reports contain everything you need to know. But nobody reads them because nobody
-          built a tool that makes it easy — until now.
-        </p>
-      </div>
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-        {problems.map(({ title, body }, i) => (
-          <div
-            key={title}
-            className="rounded-2xl border border-white/8 bg-card p-5 space-y-2 hover:border-accent/20 transition-colors"
-          >
-            <div className="flex items-center gap-2.5">
-              <span className="text-[11px] font-mono text-accent/60">0{i + 1}</span>
-              <h3 className="text-sm font-semibold text-text-primary font-display">{title}</h3>
-            </div>
-            <p className="text-xs text-text-muted leading-relaxed">{body}</p>
-          </div>
-        ))}
-        {/* Sixth card — CTA */}
-        <div className="rounded-2xl border border-accent/20 bg-accent/5 p-5 space-y-3 flex flex-col justify-between">
-          <div className="space-y-1.5">
-            <span className="text-[11px] font-mono text-accent/60">06</span>
-            <h3 className="text-sm font-semibold text-text-primary font-display">DMARC Labs solves all of this</h3>
-            <p className="text-xs text-text-muted leading-relaxed">
-              Drag in your report. Get instant, human-readable results with WHOIS-enriched senders — free, private, no account needed.
-            </p>
-          </div>
-          <a
-            href="#upload"
-            className="inline-flex items-center gap-1.5 text-[12px] font-semibold text-accent hover:text-white transition-colors"
-          >
-            Upload your report <span aria-hidden="true">↑</span>
-          </a>
-        </div>
       </div>
     </section>
   );

@@ -79,6 +79,14 @@ export default function HomePage() {
 
   useEffect(() => () => clearPurgeTimers(), [clearPurgeTimers]);
 
+  // Listen for logo click reset event from Header
+  useEffect(() => {
+    const handler = () => handleReset();
+    window.addEventListener('dmarc:reset', handler);
+    return () => window.removeEventListener('dmarc:reset', handler);
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   const handleFileAccepted = useCallback(async (file: File) => {
     setCurrentFile(file);
     setAppState('uploading');
@@ -304,6 +312,40 @@ export default function HomePage() {
       {/* Results */}
       {appState === 'results' && analysisData && (
         <div className="space-y-6">
+          {/* Top action bar */}
+          <div className="flex flex-wrap items-center gap-3">
+            <button
+              onClick={handleDownloadCSV}
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-accent text-white text-sm font-medium hover:bg-accent-hover transition-colors min-h-[40px]"
+              aria-label="Download results as CSV"
+            >
+              <Download className="h-4 w-4" aria-hidden="true" />
+              Download CSV
+            </button>
+            <button
+              onClick={handleReset}
+              className="flex items-center gap-2 px-4 py-2 rounded-md border border-border text-text-muted hover:text-text-primary hover:border-accent/50 text-sm transition-colors min-h-[40px]"
+              aria-label="Analyze a new file"
+            >
+              <RefreshCw className="h-4 w-4" aria-hidden="true" />
+              New File
+            </button>
+            <button
+              onClick={handlePurge}
+              className="flex items-center gap-2 px-4 py-2 rounded-md border border-error/40 text-error text-sm hover:bg-error/10 transition-colors min-h-[40px]"
+              aria-label="Purge session data"
+            >
+              <Trash2 className="h-4 w-4" aria-hidden="true" />
+              Purge Data
+            </button>
+            <p className="text-xs text-text-muted ml-auto">
+              Session expires{' '}
+              {analysisData.expiresAt
+                ? new Date(analysisData.expiresAt).toLocaleTimeString()
+                : 'in 1 hour'}
+            </p>
+          </div>
+
           {/* Summary cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
             <SummaryCard label="Total Emails" value={analysisData.summary.totalEmails.toLocaleString()} />

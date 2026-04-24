@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 const NAV_LINKS = [
   { href: '/contact', label: 'Contact' },
@@ -7,11 +10,21 @@ const NAV_LINKS = [
 ];
 
 export default function Header() {
+  const pathname = usePathname();
+
+  const handleLogoClick = (e: React.MouseEvent) => {
+    if (pathname === '/') {
+      e.preventDefault();
+      window.dispatchEvent(new CustomEvent('dmarc:reset'));
+    }
+  };
+
   return (
     <header className="fixed top-0 left-0 right-0 z-50 pt-6 px-4 pointer-events-none">
       <div className="max-w-fit mx-auto h-14 bg-black/70 border border-white/10 rounded-full px-6 flex items-center gap-8 shadow-2xl backdrop-blur-xl pointer-events-auto">
         <Link
           href="/"
+          onClick={handleLogoClick}
           className="flex items-center gap-3 text-text-primary font-bold text-lg font-display hover:text-accent transition-colors"
           aria-label="DMARC Labs — go to homepage"
         >

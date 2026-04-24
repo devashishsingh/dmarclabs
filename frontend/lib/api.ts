@@ -4,7 +4,7 @@ const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 const apiClient = axios.create({
   baseURL: API_URL,
-  timeout: 120000, // 2 minutes for large file analysis
+  timeout: 0, // no timeout — analysis duration depends on file size and WHOIS enrichment
   headers: {
     'Content-Type': 'application/json',
   },

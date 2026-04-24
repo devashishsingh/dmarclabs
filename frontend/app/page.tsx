@@ -118,7 +118,7 @@ export default function HomePage() {
       let message = 'An unexpected error occurred. Please try again.';
 
       if (axiosErr?.code === 'ECONNABORTED') {
-        message = 'Request timed out. Your file may be very large — please try again or request higher limits.';
+        message = 'Connection was interrupted. Please check your network and try again.';
       } else if (axiosErr?.response?.status === 413) {
         message = 'File is too large for this endpoint. Use the "Request access" link below to get higher limits.';
       } else if (axiosErr?.response?.status === 422) {

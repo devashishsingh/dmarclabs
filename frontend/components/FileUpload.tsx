@@ -141,6 +141,24 @@ export default function FileUpload({ onFileAccepted, onFileTooLarge, disabled }:
       <p className="my-4 text-center text-text-muted text-xs flex items-center justify-center gap-2">
         <span className="text-accent text-sm" aria-hidden="true">✓</span>
         Privacy-first. Files are never stored on our servers.
+        <span className="relative group inline-flex items-center">
+          <button
+            type="button"
+            className="text-accent/70 hover:text-accent underline underline-offset-2 decoration-dotted transition-colors cursor-default focus:outline-none"
+            aria-label="Learn how privacy works"
+          >
+            learn how?
+          </button>
+          {/* Tooltip */}
+          <span
+            role="tooltip"
+            className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-2 w-72 rounded-lg border border-white/10 bg-[#0d0d0d] px-4 py-3 text-left text-xs text-text-muted shadow-xl
+              opacity-0 scale-95 group-hover:opacity-100 group-hover:scale-100 transition-all duration-150 origin-bottom z-50"
+          >
+            <span className="block font-semibold text-text-primary mb-1.5">How your privacy is protected</span>
+            When you upload a file, it is written to the server&apos;s ephemeral RAM — never to any disk, database, or object storage. The file buffer is passed directly to the XML parser in memory, and the raw bytes are discarded immediately after parsing completes. Parsed results are stored in a Node.js <code className="text-accent/80">Map</code> keyed to a randomly generated session ID, and are evicted automatically after 30 minutes via a TTL timer. No file content, IP address, or personal data is logged or persisted. When you click &quot;Delete data&quot;, or when the session expires, the entry is removed from the Map and becomes unreachable — there is no recovery path, no backup, and no third-party service that received the data.
+          </span>
+        </span>
       </p>
     </div>
   );

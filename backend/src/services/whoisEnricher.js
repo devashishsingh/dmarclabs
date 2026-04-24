@@ -130,31 +130,70 @@ async function enrichIP(ip) {
 }
 
 /**
- * Enrich an array of IPs in parallel batches.
- * ip-api.com free tier allows 45 requests/min — batch to be safe.
+ * Enrich an array of IPs using ip-api.com batch endpoint.
+ * Resolves up to 100 IPs in a single POST request — no per-IP delay needed.
+ * Falls back to individual lookups for IPs that fail in the batch.
  */
 async function batchEnrich(ips) {
-  const CONCURRENCY = 10;
   const results = new Map();
+  const fallback = {
+    owner: 'Lookup failed',
+    asn: 'Unknown',
+    country: 'Unknown',
+    threatLevel: 'UNKNOWN',
+    lastUpdated: new Date().toISOString().split('T')[0],
+  };
 
-  for (let i = 0; i < ips.length; i += CONCURRENCY) {
-    const batch = ips.slice(i, i + CONCURRENCY);
-    const settled = await Promise.allSettled(batch.map((ip) => enrichIP(ip)));
-
-    for (let j = 0; j < batch.length; j++) {
-      const res = settled[j];
-      results.set(batch[j], res.status === 'fulfilled' ? res.value : {
-        owner: 'Lookup failed',
-        asn: 'Unknown',
-        country: 'Unknown',
-        threatLevel: 'UNKNOWN',
-        lastUpdated: new Date().toISOString().split('T')[0],
-      });
+  // Separate IPs already known (cache or provider list) from those needing lookup
+  const toFetch = [];
+  for (const ip of ips) {
+    const cached = whoisCache.get(ip);
+    if (cached) {
+      results.set(ip, cached);
+      continue;
     }
+    const known = checkKnownProviders(ip);
+    if (known) {
+      whoisCache.set(ip, known);
+      results.set(ip, known);
+      continue;
+    }
+    toFetch.push(ip);
+  }
 
-    // Respect ip-api.com rate limit: 45 req/min = ~1.3s per 10 requests
-    if (i + CONCURRENCY < ips.length) {
-      await new Promise((r) => setTimeout(r, 1400));
+  if (toFetch.length === 0) return results;
+
+  // ip-api.com batch endpoint: up to 100 IPs per request, single HTTP call
+  const BATCH_SIZE = 100;
+  for (let i = 0; i < toFetch.length; i += BATCH_SIZE) {
+    const chunk = toFetch.slice(i, i + BATCH_SIZE);
+    try {
+      const response = await axios.post(
+        'http://ip-api.com/batch?fields=status,message,query,country,org,isp,as,hosting,proxy,vpn',
+        chunk.map((ip) => ({ query: ip })),
+        { timeout: 10000 }
+      );
+
+      for (const data of response.data) {
+        const ip = data.query;
+        const result = data.status === 'success' ? {
+          owner: data.org || data.isp || 'Unknown',
+          asn: data.as ? data.as.split(' ')[0] : 'Unknown',
+          country: data.country || 'Unknown',
+          threatLevel: classifyThreat(data),
+          lastUpdated: new Date().toISOString().split('T')[0],
+        } : { ...fallback, lastUpdated: new Date().toISOString().split('T')[0] };
+
+        whoisCache.set(ip, result);
+        results.set(ip, result);
+      }
+    } catch {
+      // Batch failed — fill remaining IPs with fallback
+      for (const ip of chunk) {
+        if (!results.has(ip)) {
+          results.set(ip, { ...fallback, lastUpdated: new Date().toISOString().split('T')[0] });
+        }
+      }
     }
   }
 

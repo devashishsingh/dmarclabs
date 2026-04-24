@@ -49,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               {/* Nav */}
               <nav className="flex flex-wrap gap-x-6 gap-y-2 text-xs text-text-muted" aria-label="Footer navigation">
                 <Link href="/" className="hover:text-accent transition-colors">Analyzer</Link>
+                <Link href="/blog" className="hover:text-accent transition-colors">Blog</Link>
                 <Link href="/contact" className="hover:text-accent transition-colors">Contact</Link>
                 <Link href="/privacy" className="hover:text-accent transition-colors">Privacy Policy</Link>
                 <a href="https://www.linkedin.com/in/devashish-singh-52a050112" target="_blank" rel="noopener noreferrer" className="hover:text-accent transition-colors inline-flex items-center gap-1.5">

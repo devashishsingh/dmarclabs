@@ -1,8 +1,17 @@
 /** @type {import('next').NextConfig} */
+const withMDX = require('@next/mdx')({
+  extension: /\.mdx?$/,
+  options: {
+    remarkPlugins: [],
+    rehypePlugins: [],
+  },
+});
+
 const BACKEND_URL = process.env.BACKEND_URL || 'https://dmarclabs.onrender.com';
 
-const nextConfig = {
+const nextConfig = withMDX({
   reactStrictMode: true,
+  pageExtensions: ['ts', 'tsx', 'js', 'jsx', 'md', 'mdx'],
   async rewrites() {
     return [
       {
@@ -24,6 +33,6 @@ const nextConfig = {
       },
     ];
   },
-};
+});
 
 module.exports = nextConfig;

@@ -1,0 +1,264 @@
+export const metadata = {
+  title: 'Understanding DMARC Reports: What They Tell You and How to Act on Them — DMARC Labs',
+  description:
+    'DMARC aggregate reports are XML files packed with sender intelligence. Learn what each field means, how to spot spoofing attempts, and how DMARC Labs turns raw XML into clear insights in seconds.',
+  keywords: ['DMARC', 'aggregate report', 'rua', 'SPF', 'DKIM', 'email security', 'spoofing', 'WHOIS'],
+  authors: [{ name: 'DMARC Labs' }],
+  openGraph: {
+    title: 'Understanding DMARC Reports — DMARC Labs Blog',
+    description:
+      'What every DMARC aggregate report field means, how to spot spoofing, and how to go from raw XML to actionable sender intelligence.',
+    type: 'article',
+    siteName: 'DMARC Labs',
+    publishedTime: '2026-04-24T00:00:00Z',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Understanding DMARC Reports — DMARC Labs Blog',
+    description:
+      'What every DMARC aggregate report field means, how to spot spoofing, and how to go from raw XML to actionable insights.',
+  },
+};
+
+import BlogLayout from '@/components/BlogLayout';
+
+export default function Page({ children }) {
+  return (
+    <BlogLayout
+      title="Understanding DMARC Reports: What They Tell You and How to Act on Them"
+      date="2026-04-24"
+      readingTime="8 min read"
+      tags={['DMARC', 'SPF', 'DKIM', 'Email Security', 'Guide']}
+    >
+      {children}
+    </BlogLayout>
+  );
+}
+
+Every day, thousands of emails are sent using your domain — some by you, some by your marketing platform, and some by attackers pretending to be you. DMARC aggregate reports are the only way to know which is which. The problem? They arrive as dense XML files that look like this:
+
+```xml
+<feedback>
+  <report_metadata>
+    <org_name>google.com</org_name>
+    <date_range><begin>1713916800</begin><end>1714003199</end></date_range>
+  </report_metadata>
+  <record>
+    <row>
+      <source_ip>209.85.220.41</source_ip>
+      <count>4821</count>
+      <policy_evaluated><dkim>pass</dkim><spf>pass</spf></policy_evaluated>
+    </row>
+  </record>
+</feedback>
+```
+
+Most teams either ignore these files or spend hours decoding them manually. **DMARC Labs was built to eliminate that bottleneck entirely.**
+
+---
+
+## What Problem Does DMARC Solve?
+
+### Email spoofing and phishing
+
+Without DMARC, any mail server on the internet can send an email claiming to be `you@yourdomain.com`. This is the core vector behind CEO fraud, invoice scams, and supply-chain phishing — attacks that collectively cost businesses [billions of dollars](https://www.ic3.gov/Media/PDF/AnnualReport/2023_IC3Report.pdf) annually.
+
+DMARC (Domain-based Message Authentication, Reporting & Conformance) is a DNS policy that instructs receiving mail servers to:
+
+1. **Check** whether the sending IP is authorised by your SPF record
+2. **Check** whether the message is signed by your DKIM key
+3. **Apply a policy** (`none`, `quarantine`, or `reject`) if both checks fail
+4. **Send you a report** summarising every result
+
+> A DMARC policy at `p=reject` means that unauthenticated mail claiming to be from your domain gets dropped before it ever reaches an inbox.
+
+### The visibility gap
+
+Even with DMARC enforced, most teams have no clear picture of:
+
+- Which third-party services (Mailchimp, Salesforce, Zendesk, etc.) are sending mail on their behalf
+- Whether those services are properly aligned with their SPF/DKIM setup
+- Whether any rogue or compromised servers are attempting to impersonate them
+- Which legitimate emails are failing authentication and why
+
+Aggregate reports answer all of these questions — but only if you can read them.
+
+---
+
+## Anatomy of a DMARC Aggregate Report
+
+A DMARC aggregate report (sent to the address in your `rua=` DNS tag) is a gzip-compressed XML file. Here is what each section means:
+
+### Report metadata
+
+| Field | What it means |
+|-------|--------------|
+| `org_name` | The receiving mail provider who generated the report (e.g. Google, Microsoft) |
+| `date_range` | The 24-hour UTC window this report covers |
+| `report_id` | Unique identifier for this report |
+
+### Policy published
+
+This reflects what your DNS record said **at the time the report was generated**, not what it says today. Always check this first — if it does not match what you intended, a DNS change may not have propagated yet.
+
+### Record rows
+
+Each row represents a unique **sending IP** and contains:
+
+| Field | What it means |
+|-------|--------------|
+| `source_ip` | The IP address that sent the email |
+| `count` | Number of emails sent from this IP in the reporting window |
+| `policy_evaluated.dkim` | Did the DKIM signature verify? (`pass` / `fail`) |
+| `policy_evaluated.spf` | Was the IP in the SPF record? (`pass` / `fail`) |
+| `auth_results.dkim.domain` | The domain in the DKIM `d=` tag |
+| `auth_results.spf.domain` | The `MAIL FROM` (envelope sender) domain |
+
+**DMARC alignment** requires that at least one of SPF or DKIM passes **and** the authenticated domain aligns (matches or is a subdomain of) the `From:` header domain. A pass on SPF alone is not enough if the SPF domain does not align.
+
+---
+
+## The Four Sending IP Scenarios
+
+When you analyse a DMARC report, every sending IP falls into one of four categories. DMARC Labs shows these as **threat levels**:
+
+### ✅ TRUSTED
+
+A well-known legitimate sender — Google Workspace, Microsoft 365, your ESP (Mailchimp, SendGrid, Postmark), or a large verified cloud network. These IPs have a strong global reputation and the DMARC checks align correctly.
+
+**Action:** No action needed. These are your expected senders.
+
+### 🟡 NEUTRAL
+
+A registered, reachable IP that is not on any blocklist but does not belong to a widely-known sender. This is common for:
+- In-house mail servers
+- Regional or smaller ESPs
+- New cloud providers with limited reputation data
+
+**Action:** Identify the owner in the WHOIS data. If it is a service you authorised, ensure it is correctly included in your SPF record and that DKIM is configured. If you do not recognise it, investigate further.
+
+### 🔴 SUSPICIOUS
+
+An IP associated with flagged Autonomous System Numbers (ASNs), open proxies, residential botnets, bulletproof hosting, or known spam/phishing infrastructure.
+
+**Action:** If DMARC is passing for this IP, someone has incorrectly authorised it (a compromised `include:` in SPF is a common cause). If DMARC is failing, your policy is working — move to `p=reject` to block it entirely.
+
+### ⚪ UNKNOWN
+
+WHOIS lookups returned no usable owner information. This can mean the IP is very new, belongs to a private range, or the WHOIS server was unreachable at query time.
+
+**Action:** Cross-reference the IP against your own send logs. Re-run the analysis at a later time if the WHOIS data was temporarily unavailable.
+
+---
+
+## Common Problems DMARC Reports Reveal
+
+### 1. Shadow IT senders
+
+Your marketing team signed up for a new email tool without telling IT. It is sending newsletters as `@yourdomain.com` but is not in your SPF record. DMARC reports show the IP, the volume, and the fail status — you can then either add the service to SPF or ask the team to stop using it.
+
+### 2. SPF `~all` softfail leaking forged mail
+
+A `~all` softfail policy means that failing mail is *marked* suspicious but still *delivered*. Reports will show these failures as policy `none` or `quarantine` outcomes. Moving to `p=reject` closes the gap.
+
+### 3. Forwarded email breaking SPF
+
+Forwarded email is a classic SPF failure source. When a mailbox at `user@isp.com` forwards to `user@gmail.com`, the forwarding server's IP is not in your SPF. DMARC reports will show these as SPF-fail, DKIM-pass — which is fine because DKIM still passes. This is why having DKIM configured matters.
+
+### 4. Third-party service misconfigured
+
+A transactional email provider is sending on your behalf, but they are using your domain in the envelope sender (SPF domain) without a CNAME/subdomain alignment setup. DMARC fails because the `From:` domain and the SPF domain do not match. The fix is either to use a subdomain (`mail.yourdomain.com`) or configure the provider's DKIM signing correctly.
+
+### 5. Domain spoofing attempts
+
+You see an IP from a bulletproof hosting provider sending 400 emails as your domain — all DMARC failures. These are spoofing attempts being blocked by receiving servers. Once you move to `p=reject`, these are silently discarded. You can still see them in reports, which tells you whether you are being actively targeted.
+
+---
+
+## How to Use DMARC Labs
+
+Getting from a raw XML report to actionable intelligence takes three steps:
+
+### Step 1 — Export your aggregate report
+
+Log into your email admin console and download the DMARC XML report. Most providers (Google, Microsoft, Proofpoint) allow you to configure the `rua=` address to a mailbox you control. Tools like [dmarcian](https://dmarcian.com) or simply checking your mailbox will surface the `.xml.gz` files.
+
+Save the XML file to your computer. You do not need to decompress it — **DMARC Labs accepts raw XML directly.**
+
+### Step 2 — Drop the file into DMARC Labs
+
+Go to [dmarclabsds1.xyz](https://www.dmarclabsds1.xyz/), drag and drop your `.xml` file onto the upload zone (or click to browse), and wait. The analysis pipeline runs entirely in-memory:
+
+- **Memory processing** — Your file is loaded directly into the analysis engine. Nothing is written to disk.
+- **Parsing DMARC XML** — Every `<record>` block is extracted and decoded into structured per-IP authentication data.
+- **Enriching IPs with WHOIS** — Each unique sending IP is looked up for owner, ASN, country, and threat classification.
+- **Building results** — The enriched data is aggregated into the results table.
+
+The whole process typically completes in under 5 seconds for reports with up to 50 MB of data.
+
+### Step 3 — Interpret the results
+
+The results table groups every sending IP with its:
+
+- **Email volume** — How many messages were sent from this IP in the report window
+- **DMARC pass / fail counts and rate** — The authentication outcome under your policy
+- **SPF pass / fail counts and rate**
+- **DKIM pass / fail counts and rate**
+- **Sender intelligence** — Verified owner name, country, and threat level
+
+Sort by **Threat** (descending) to surface SUSPICIOUS IPs first. Sort by **Volume** (descending) to prioritise high-impact senders.
+
+When you are done, click **Download CSV** to export the full enriched table. Use it in a spreadsheet, share it with your security team, or import it into your SIEM.
+
+Your data is **never stored**. The session is purged automatically after one hour, and you can manually delete it at any time with the **Purge data** button.
+
+---
+
+## Building Toward `p=reject`
+
+Most organisations start with `p=none` (monitoring mode) and then work toward `p=reject`. The typical path is:
+
+1. **Set `p=none`** and collect two to four weeks of aggregate reports
+2. **Identify all legitimate senders** using DMARC Labs — make sure every one has both SPF and DKIM passing and aligned
+3. **Fix misconfigurations** — add missing ESPs to SPF, configure DKIM signing on each service
+4. **Move to `p=quarantine`** — failing mail goes to spam rather than inbox
+5. **Monitor for regressions** — re-run DMARC Labs weekly to catch any new services
+6. **Move to `p=reject`** — full enforcement. Unauthenticated mail is blocked at the receiving server.
+
+> DMARC Labs is designed to accelerate steps 1, 2, and 5. Each time you receive a new aggregate report, drop it in and you have a fresh, enriched picture of your sending infrastructure in seconds — no spreadsheet work, no manual WHOIS lookups.
+
+---
+
+## Frequently Asked Questions
+
+### Do I need to create an account?
+
+No. DMARC Labs has no accounts, no login, and no signup. Drop your file in and go.
+
+### Is my data safe?
+
+Yes. Your file is processed entirely in working memory. It is never written to any disk, logged, or shared with any third party. The in-memory session is automatically purged after one hour. You can also trigger an immediate purge manually.
+
+### What file size can I analyse?
+
+Up to **200 MB** in the free tier. If you have aggregate reports larger than 200 MB (typically from very high-volume senders), use the **Request access** link on the homepage to get higher limits.
+
+### Can I analyse multiple reports at once?
+
+Currently one report per session. For multi-report analysis across a long date range, process each file individually and merge the exported CSVs in your spreadsheet tool.
+
+### What does it mean if DMARC pass rate is below 100%?
+
+It means some email claiming to be from your domain is failing authentication. The most common causes are:
+- A legitimate sender not included in your SPF record
+- A sender not configured to DKIM-sign with your domain
+- Forwarded email breaking SPF alignment (acceptable if DKIM passes)
+- Active spoofing attempts (acceptable if your policy is `p=quarantine` or `p=reject`)
+
+Sort the results table by DMARC rate ascending to find the worst offenders first.
+
+---
+
+## Start Analysing Your DMARC Reports
+
+[Open DMARC Labs →](/) — free, no signup, results in seconds.

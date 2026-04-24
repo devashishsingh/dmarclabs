@@ -126,10 +126,9 @@ export async function copyToClipboard(text: string): Promise<boolean> {
  * Validates that a file is an accepted DMARC report type.
  */
 export function validateDMARCFile(file: File): string | null {
-  const accepted = ['.xml', '.gz', '.zip'];
   const ext = file.name.slice(file.name.lastIndexOf('.')).toLowerCase();
-  if (!accepted.includes(ext)) {
-    return `Unsupported file type "${ext}". Please upload a .xml, .gz, or .zip DMARC report.`;
+  if (ext !== '.xml') {
+    return `Unsupported file type "${ext}". Please upload a .xml DMARC report.`;
   }
   const maxBytes = parseInt(process.env.NEXT_PUBLIC_MAX_FILE_SIZE_MB || '200', 10) * 1024 * 1024;
   if (file.size > maxBytes) {

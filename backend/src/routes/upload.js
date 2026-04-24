@@ -18,12 +18,11 @@ const storage = multer.diskStorage({
 });
 
 function fileFilter(req, file, cb) {
-  const allowed = ['.xml', '.gz', '.zip'];
   const ext = path.extname(file.originalname).toLowerCase();
-  if (allowed.includes(ext)) {
+  if (ext === '.xml') {
     cb(null, true);
   } else {
-    const err = new Error('Only .xml, .gz and .zip DMARC report files are accepted');
+    const err = new Error('Only .xml DMARC report files are accepted');
     err.status = 415;
     err.code = 'INVALID_FILE_TYPE';
     cb(err);

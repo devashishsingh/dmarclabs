@@ -131,7 +131,9 @@ export default function HomePage() {
         message = 'File is too large for this endpoint. Use the "Request access" link below to get higher limits.';
       } else if (axiosErr?.response?.status === 422) {
         const detail = axiosErr.response?.data?.message ?? '';
-        message = detail || 'The file does not appear to be a valid DMARC XML report. Check that it is an uncompressed .xml file or a .gz/.zip containing one.';
+        message = detail
+          ? `XML syntax error: ${detail}`
+          : 'The file could not be parsed. Make sure it is a valid, uncompressed DMARC XML report.';
       } else if (axiosErr?.response?.status === 429) {
         message = 'Too many requests. Please wait a moment and try again.';
       } else if (axiosErr?.response?.data?.message) {

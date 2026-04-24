@@ -1,5 +1,6 @@
 const express = require('express');
 const { getAllFeedback, getSummary } = require('../services/feedbackStore');
+const { getAllContacts, getUnreadCount, markRead } = require('../services/contactStore');
 const config = require('../config/env');
 
 const router = express.Router();
@@ -21,6 +22,20 @@ router.get('/feedback', requireAdminToken, (req, res) => {
   const summary = getSummary();
   const entries = getAllFeedback();
   return res.status(200).json({ summary, entries });
+});
+
+// GET /api/admin/contact
+router.get('/contact', requireAdminToken, (req, res) => {
+  const entries = getAllContacts();
+  const unread = getUnreadCount();
+  return res.status(200).json({ unread, total: entries.length, entries });
+});
+
+// PATCH /api/admin/contact/:id/read
+router.patch('/contact/:id/read', requireAdminToken, (req, res) => {
+  const found = markRead(req.params.id);
+  if (!found) return res.status(404).json({ error: 'NOT_FOUND' });
+  return res.status(200).json({ success: true });
 });
 
 module.exports = router;

@@ -1,10 +1,12 @@
 'use client';
 
 import { useState } from 'react';
-import { Send, Mail, Github, Twitter } from 'lucide-react';
+import { Send, Github, Twitter } from 'lucide-react';
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
 
 export default function ContactPage() {
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' });
+  const [form, setForm] = useState({ name: '', subject: '', message: '' });
   const [status, setStatus] = useState<'idle' | 'sending' | 'sent' | 'error'>('idle');
   const [errorMessage, setErrorMessage] = useState<string>('Something went wrong. Please try again.');
 
@@ -12,7 +14,7 @@ export default function ContactPage() {
     e.preventDefault();
     setStatus('sending');
     try {
-      const res = await fetch('/api/contact', {
+      const res = await fetch(`${API_URL}/api/contact`, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(form),
@@ -52,15 +54,6 @@ export default function ContactPage() {
           <div className="rounded-2xl border border-white/10 bg-card p-5 space-y-4">
             <h2 className="text-sm font-semibold font-display text-text-primary">Other ways to reach us</h2>
             <div className="space-y-3">
-              <a
-                href="/contact"
-                className="flex items-center gap-3 text-sm text-text-muted hover:text-accent transition-colors group"
-              >
-                <span className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center text-accent group-hover:bg-accent/20 transition-colors flex-shrink-0">
-                  <Mail className="h-3.5 w-3.5" />
-                </span>
-                <span>Use the form&nbsp;&rarr;</span>
-              </a>
               <a
                 href="https://github.com"
                 target="_blank"
@@ -115,30 +108,17 @@ export default function ContactPage() {
               className="rounded-2xl border border-white/10 bg-card p-6 space-y-5"
               noValidate
             >
-              <div className="grid sm:grid-cols-2 gap-5">
-                <Field label="Name" required>
-                  <input
-                    type="text"
-                    name="name"
-                    value={form.name}
-                    onChange={handleChange}
-                    required
-                    placeholder="Your name"
-                    className="input-field"
-                  />
-                </Field>
-                <Field label="Email" required>
-                  <input
-                    type="email"
-                    name="email"
-                    value={form.email}
-                    onChange={handleChange}
-                    required
-                    placeholder="you@example.com"
-                    className="input-field"
-                  />
-                </Field>
-              </div>
+              <Field label="Name" required>
+                <input
+                  type="text"
+                  name="name"
+                  value={form.name}
+                  onChange={handleChange}
+                  required
+                  placeholder="Your name"
+                  className="input-field"
+                />
+              </Field>
 
               <Field label="Subject" required>
                 <select
@@ -189,7 +169,6 @@ export default function ContactPage() {
               <p className="text-[11px] text-text-muted text-center">
                 By submitting this form you agree to our{' '}
                 <a href="/privacy" className="text-accent hover:underline">Privacy Policy</a>.
-                We will never share your details.
               </p>
             </form>
           )}

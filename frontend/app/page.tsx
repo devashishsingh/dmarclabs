@@ -154,6 +154,12 @@ export default function HomePage() {
     setShowAccessForm(true);
   }, []);
 
+  const scrollToUpload = () => {
+    setTimeout(() => {
+      document.getElementById('upload')?.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    }, 50);
+  };
+
   const handlePurge = async () => {
     if (!sessionId) return;
     clearPurgeTimers();
@@ -167,6 +173,7 @@ export default function HomePage() {
       setAnalysisData(null);
       setAppState('idle');
       setErrorMessage(null);
+      scrollToUpload();
     }
   };
 
@@ -185,6 +192,7 @@ export default function HomePage() {
     setErrorMessage(null);
     setUploadProgress(0);
     setStatusMessage('');
+    scrollToUpload();
   };
 
   return (
@@ -245,7 +253,7 @@ export default function HomePage() {
 
       {/* Upload zone */}
       {(appState === 'idle' || appState === 'error') && (
-        <div className="rounded-2xl border border-white/10 bg-card shadow-2xl overflow-hidden">
+        <div id="upload" className="rounded-2xl border border-white/10 bg-card shadow-2xl overflow-hidden">
           <div className="p-2">
             <FileUpload
               onFileAccepted={handleFileAccepted}

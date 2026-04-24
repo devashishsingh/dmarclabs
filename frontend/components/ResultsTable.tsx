@@ -148,8 +148,11 @@ export default function ResultsTable({ records }: ResultsTableProps) {
                 'hover:bg-accent/5',
               ].join(' ')}>
               {/* IP */}
-              <td className="px-2 py-2 font-mono text-xs text-text-primary whitespace-nowrap">
-                <span className="flex items-center">{record.ip}<CopyButton text={record.ip} /></span>
+              <td className="px-2 py-2 font-mono text-xs text-text-primary max-w-[120px]">
+                <span className="flex items-center min-w-0">
+                  <span className="truncate" title={record.ip}>{record.ip}</span>
+                  <CopyButton text={record.ip} />
+                </span>
               </td>
               {/* Volume */}
               <td className="px-2 py-2 text-right font-mono text-xs text-text-primary font-medium">
@@ -168,7 +171,7 @@ export default function ResultsTable({ records }: ResultsTableProps) {
               <FailCell value={record.dkim.fail} />
               <RateCell rate={record.dkim.passRate} sortable active={sortKey === 'dkim'} dir={sortDir} onSort={() => handleSort('dkim')} />
               {/* Sender Intelligence */}
-              <td className="px-2 py-2 text-xs text-text-muted max-w-[160px] truncate border-l border-white/5"
+              <td className="px-2 py-2 text-xs text-text-muted max-w-[130px] truncate border-l border-white/5"
                 title={record.whois.owner}>
                 {record.whois.owner}
               </td>

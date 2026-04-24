@@ -1,4 +1,5 @@
 const express = require('express');
+const { timingSafeEqual } = require('crypto');
 const { getAllFeedback, getSummary } = require('../services/feedbackStore');
 const { getAllContacts, getUnreadCount, markRead } = require('../services/contactStore');
 const { getStats } = require('../services/statsStore');
@@ -6,13 +7,28 @@ const config = require('../config/env');
 
 const router = express.Router();
 
+/**
+ * Constant-time token comparison to prevent timing-based token enumeration.
+ * Pads both buffers to the same length before comparing.
+ */
+function safeTokenEqual(a, b) {
+  const aBuf = Buffer.from(a);
+  const bBuf = Buffer.from(b);
+  if (aBuf.length !== bBuf.length) {
+    // Run dummy comparison to keep timing uniform, then reject
+    timingSafeEqual(Buffer.alloc(aBuf.length), Buffer.alloc(aBuf.length));
+    return false;
+  }
+  return timingSafeEqual(aBuf, bBuf);
+}
+
 function requireAdminToken(req, res, next) {
   if (!config.adminToken) {
     return res.status(503).json({ error: 'ADMIN_DISABLED', message: 'Admin access is not configured' });
   }
   const auth = req.headers['authorization'] || '';
   const token = auth.startsWith('Bearer ') ? auth.slice(7) : '';
-  if (!token || token !== config.adminToken) {
+  if (!token || !safeTokenEqual(token, config.adminToken)) {
     return res.status(401).json({ error: 'UNAUTHORIZED', message: 'Invalid or missing admin token' });
   }
   next();

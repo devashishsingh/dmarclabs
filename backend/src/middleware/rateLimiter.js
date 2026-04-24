@@ -10,8 +10,9 @@ const rateLimiter = rateLimit({
     error: 'RATE_LIMITED',
     message: `Too many requests. Limit: ${config.rateLimit} per minute.`,
   },
-  // Key by IP, using x-forwarded-for for Fly.io proxy
-  keyGenerator: (req) => req.headers['x-forwarded-for']?.split(',')[0]?.trim() || req.ip,
+  // Use req.ip which is correctly set by Express with trust proxy:1
+  // Never read x-forwarded-for directly — it can be spoofed by clients
+  keyGenerator: (req) => req.ip || req.socket.remoteAddress || 'unknown',
 });
 
 module.exports = rateLimiter;

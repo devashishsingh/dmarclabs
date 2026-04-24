@@ -75,7 +75,7 @@ function extractRecords(parsed) {
     if (!row) continue;
 
     const ip = safeText(row.source_ip);
-    if (!ip) continue;
+    if (!ip || !isValidIP(ip)) continue;
 
     const count = parseInt(safeText(row.count), 10) || 0;
     const policyEvaluated = row.policy_evaluated && row.policy_evaluated[0];
@@ -136,6 +136,22 @@ function safeText(val) {
   if (!val) return '';
   if (Array.isArray(val)) return val[0] || '';
   return String(val);
+}
+
+/**
+ * Validates that a string is a well-formed IPv4 or IPv6 address.
+ * Rejects any non-IP value to prevent SSRF via crafted DMARC XML.
+ */
+function isValidIP(ip) {
+  // IPv4: four dot-separated octets 0-255
+  const ipv4Re = /^(\d{1,3})\.(\d{1,3})\.(\d{1,3})\.(\d{1,3})$/;
+  const m = ipv4Re.exec(ip);
+  if (m) {
+    return m.slice(1).every((o) => parseInt(o, 10) <= 255);
+  }
+  // IPv6: colon-hex notation (handles full, compressed, and IPv4-mapped forms)
+  const ipv6Re = /^[0-9a-fA-F:]{2,39}$/;
+  return ipv6Re.test(ip) && ip.includes(':');
 }
 
 function formatPassRate(pass, total) {

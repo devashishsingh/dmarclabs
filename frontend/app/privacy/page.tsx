@@ -37,7 +37,7 @@ export default function PrivacyPage() {
           </h2>
           <ul className="space-y-1.5 text-sm text-text-muted list-none">
             <li className="flex items-start gap-2"><span className="text-accent mt-0.5">✓</span> Your DMARC XML files are processed entirely in RAM. Nothing is ever written to disk.</li>
-            <li className="flex items-start gap-2"><span className="text-accent mt-0.5">✓</span> Sessions and all associated data are automatically deleted after 30 minutes.</li>
+            <li className="flex items-start gap-2"><span className="text-accent mt-0.5">✓</span> Sessions and all associated data are automatically deleted after 1 hour.</li>
             <li className="flex items-start gap-2"><span className="text-accent mt-0.5">✓</span> We do not use advertising trackers, analytics cookies, or third-party marketing pixels.</li>
             <li className="flex items-start gap-2"><span className="text-accent mt-0.5">✓</span> We do not sell, rent, or share your data with anyone.</li>
             <li className="flex items-start gap-2"><span className="text-accent mt-0.5">✓</span> No account or sign-up is required.</li>
@@ -60,7 +60,7 @@ export default function PrivacyPage() {
               content is received by our API server and held exclusively in process memory for the
               duration of your session. It is never written to any database, object store, log file,
               or persistent medium. Once your session ends — either when you click "Purge Data", close
-              the tab, or 30 minutes elapse — the in-memory data is destroyed and is unrecoverable.
+              the tab, or 1 hour elapses — the in-memory data is destroyed and is unrecoverable.
             </p>
           </Subsection>
           <Subsection heading="2.2 IP addresses in your report">
@@ -151,7 +151,7 @@ export default function PrivacyPage() {
           <div className="mt-4 space-y-3 text-sm">
             {[
               ['Right of access', 'You can view all data in your session at any time via the results page.'],
-              ['Right to erasure', 'Click "Purge Data" at any time to instantly delete your session. All data is auto-deleted after 30 minutes regardless.'],
+              ['Right to erasure', 'Click "Purge Data" at any time to instantly delete your session. All data is auto-deleted after 1 hour regardless.'],
               ['Right to restriction', 'You may stop using the service at any time; no further processing occurs after session expiry.'],
               ['Right to portability', 'Download your results as CSV at any time before the session expires.'],
               ['Right to object', 'Contact us at devashish.singh12@gmail.com if you have objections to any processing.'],

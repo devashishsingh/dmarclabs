@@ -96,7 +96,7 @@ In Vercel Dashboard → Project → Settings → Environment Variables, add:
 | `MODERATOR_EMAIL`  | Yes      | Email that receives access requests      |
 | `CORS_ORIGIN`      | Yes      | Frontend URL (comma-separated for multiple) |
 | `MAX_FILE_SIZE_MB` | No       | Default `100`                            |
-| `SESSION_TTL`      | No       | Session lifetime ms. Default `1800000`   |
+| `SESSION_TTL`      | No       | Session lifetime ms. Default `3600000`   |
 | `RATE_LIMIT`       | No       | Requests/min per IP. Default `10`        |
 
 ### Frontend (`frontend/.env.local`)
@@ -131,12 +131,12 @@ Browser
 
 Session storage: node-cache (in-memory, no database)
 WHOIS: ip-api.com (45 req/min free tier, cached 24h per IP)
-File storage: OS tmpdir (deleted after analysis or 30min TTL)
+File storage: OS tmpdir (deleted after analysis or 1hr TTL)
 ```
 
 ### Privacy Guarantees
 - Uploaded files are deleted from disk immediately after XML parsing
-- Session data (results) lives in-memory only, auto-expires in 30 minutes
+- Session data (results) lives in-memory only, auto-expires in 1 hour
 - Users can trigger instant purge at any time
 - No personal data is logged
 - No database — everything is ephemeral

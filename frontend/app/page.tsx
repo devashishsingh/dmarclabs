@@ -28,8 +28,8 @@ import { formatBytes, resultsToCSV, downloadCSV } from '@/lib/utils';
 
 type AppState = 'idle' | 'uploading' | 'analyzing' | 'results' | 'error';
 
-const SESSION_TTL_MS = 30 * 60 * 1000; // 30 minutes
-const WARN_BEFORE_MS = 5 * 60 * 1000;  // warn 5 min before expiry
+const SESSION_TTL_MS = 60 * 60 * 1000; // 1 hour
+const WARN_BEFORE_MS = 10 * 60 * 1000; // warn 10 min before expiry
 
 export default function HomePage() {
   const [appState, setAppState] = useState<AppState>('idle');
@@ -55,7 +55,7 @@ export default function HomePage() {
     warnTimerRef.current = setTimeout(() => {
       toastWarning(
         'Session expiring soon',
-        'Your analysis data will be auto-purged in 5 minutes. Download your CSV now if needed.',
+        'Your analysis data will be auto-purged in 10 minutes. Download your CSV now if needed.',
         0 // sticky
       );
     }, SESSION_TTL_MS - WARN_BEFORE_MS);
@@ -348,7 +348,7 @@ export default function HomePage() {
               Session expires{' '}
               {analysisData.expiresAt
                 ? new Date(analysisData.expiresAt).toLocaleTimeString()
-                : 'in 30 minutes'}
+                : 'in 1 hour'}
             </p>
           </div>
 
@@ -408,7 +408,7 @@ const HOW_IT_WORKS = [
     step: '03',
     icon: ShieldCheck,
     title: 'Review & export',
-    body: 'See per-IP DMARC pass rate, SPF and DKIM alignment, volume, and risk. Export everything as CSV. Your data is auto-purged after 30 minutes.',
+    body: 'See per-IP DMARC pass rate, SPF and DKIM alignment, volume, and risk. Export everything as CSV. Your data is auto-purged after 1 hour.',
   },
 ];
 

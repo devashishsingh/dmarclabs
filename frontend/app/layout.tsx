@@ -69,7 +69,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
                   <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
                   GDPR compliant
                 </span>
-                <span>Sessions auto-purge after 30 min</span>
+                <span>Sessions auto-purge after 1 hour</span>
               </div>
             </div>
           </div>

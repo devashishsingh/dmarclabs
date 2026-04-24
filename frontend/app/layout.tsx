@@ -3,6 +3,7 @@ import Link from 'next/link';
 import './globals.css';
 import Header from '@/components/Header';
 import { HeaderVisibilityProvider } from '@/lib/headerVisibility';
+import JsonLd from '@/components/JsonLd';
 
 export const metadata: Metadata = {
   title: 'DMARC Labs — Fast, Private, Free DMARC Analyzer',
@@ -10,16 +11,21 @@ export const metadata: Metadata = {
     'Analyze DMARC aggregate XML reports instantly. Get SPF, DKIM, and IP WHOIS data with zero signup and full privacy.',
   keywords: ['DMARC', 'email security', 'SPF', 'DKIM', 'XML analyzer', 'WHOIS'],
   robots: 'index, follow',
+  alternates: {
+    canonical: 'https://www.dmarclabsds1.xyz',
+  },
   openGraph: {
     title: "DMARC Labs — Stop Guessing Who's Sending From Your Domain",
     description: 'Instant DMARC report analysis with WHOIS-enriched sender intelligence. No signup. No credit card. Your data deleted after analysis.',
     type: 'website',
     siteName: 'DMARC Labs',
+    url: 'https://www.dmarclabsds1.xyz',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'DMARC Labs — Free DMARC Report Analyzer',
     description: 'Instant DMARC report analysis with WHOIS-enriched sender intelligence. No signup. No credit card.',
+    site: '@dmarclabs',
   },
 };
 
@@ -35,6 +41,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           <div className="absolute inset-0 [background-image:linear-gradient(rgba(255,255,255,0.03)_1px,transparent_1px),linear-gradient(90deg,rgba(255,255,255,0.03)_1px,transparent_1px)] [background-size:40px_40px] [mask-image:radial-gradient(circle_at_center,black,transparent_80%)]" />
         </div>
 
+        <JsonLd
+          type="website"
+          name="DMARC Labs"
+          url="https://www.dmarclabsds1.xyz"
+          description="Analyze DMARC aggregate XML reports instantly. Get SPF, DKIM, and IP WHOIS data with zero signup and full privacy."
+        />
         <Header />
         <main id="main-content" className="min-h-screen flex flex-col">
           {children}

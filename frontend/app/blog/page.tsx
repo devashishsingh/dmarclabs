@@ -6,11 +6,15 @@ export const metadata: Metadata = {
   title: 'Blog — DMARC Labs',
   description: 'Guides, explainers, and best practices for DMARC, SPF, DKIM, and email deliverability.',
   robots: 'index, follow',
+  alternates: {
+    canonical: 'https://www.dmarclabsds1.xyz/blog',
+  },
   openGraph: {
     title: 'Blog — DMARC Labs',
     description: 'Guides, explainers, and best practices for DMARC, SPF, DKIM, and email deliverability.',
     type: 'website',
     siteName: 'DMARC Labs',
+    url: 'https://www.dmarclabsds1.xyz/blog',
   },
 };
 

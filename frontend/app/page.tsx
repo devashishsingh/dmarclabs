@@ -20,6 +20,8 @@ import ProgressBar from '@/components/ProgressBar';
 import AnalysisTimeline from '@/components/AnalysisTimeline';
 import type { AnalysisStep } from '@/components/AnalysisTimeline';
 import Feedback from '@/components/Feedback';
+import Dashboard from '@/components/Dashboard';
+import DashboardPrompt from '@/components/DashboardPrompt';
 import { ToastContainer } from '@/components/Toast';
 import { useToast } from '@/lib/useToast';
 import { useHeaderVisibility } from '@/lib/headerVisibility';
@@ -44,6 +46,8 @@ export default function HomePage() {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const [showAccessForm, setShowAccessForm] = useState(false);
   const [oversizeFile, setOversizeFile] = useState<File | null>(null);
+  const [showDashboard, setShowDashboard] = useState(false);
+  const [showDashboardPrompt, setShowDashboardPrompt] = useState(false);
   const { toasts, dismiss, success: toastSuccess, warning: toastWarning, purge: toastPurge } = useToast();
   const { hideHeader, showHeader } = useHeaderVisibility();
   const purgeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -125,6 +129,8 @@ export default function HomePage() {
       setRetryCount(0);
       toastSuccess('Analysis complete', `Found ${result.summary.totalIPs} sending IPs across ${result.summary.totalEmails.toLocaleString()} emails.`, 6000);
       startPurgeTimers();
+      // Show dashboard prompt after a short delay
+      setTimeout(() => setShowDashboardPrompt(true), 2200);
     } catch (err: unknown) {
       const axiosErr = err as { response?: { data?: { message?: string }; status?: number }; code?: string; message?: string };
       let message = 'An unexpected error occurred. Please try again.';
@@ -197,6 +203,8 @@ export default function HomePage() {
     setErrorMessage(null);
     setUploadProgress(0);
     setStatusMessage('');
+    setShowDashboard(false);
+    setShowDashboardPrompt(false);
     showHeader();
     scrollToUpload();
   };
@@ -334,8 +342,16 @@ export default function HomePage() {
           {/* Top action bar */}
           <div className="flex flex-wrap items-center gap-3">
             <button
+              onClick={() => setShowDashboard(true)}
+              className="flex items-center gap-2 px-4 py-2 rounded-md bg-accent text-white text-sm font-medium hover:bg-red-500 transition-colors min-h-[40px]"
+              aria-label="Open dashboard view"
+            >
+              <BarChart2 className="h-4 w-4" aria-hidden="true" />
+              Dashboard
+            </button>
+            <button
               onClick={handleDownloadCSV}
-              className="flex items-center gap-2 px-4 py-2 rounded-md bg-accent text-white text-sm font-medium hover:bg-accent-hover transition-colors min-h-[40px]"
+              className="flex items-center gap-2 px-4 py-2 rounded-md border border-border text-text-muted hover:text-text-primary hover:border-accent/50 text-sm transition-colors min-h-[40px]"
               aria-label="Download results as CSV"
             >
               <Download className="h-4 w-4" aria-hidden="true" />
@@ -418,6 +434,19 @@ export default function HomePage() {
             <Feedback sessionId={analysisData.sessionId} />
           </div>
         </div>
+      )}
+
+      {/* Dashboard full-screen overlay */}
+      {showDashboard && analysisData && (
+        <Dashboard records={analysisData.results} onClose={() => setShowDashboard(false)} />
+      )}
+
+      {/* Dashboard prompt after results */}
+      {showDashboardPrompt && !showDashboard && (
+        <DashboardPrompt
+          onAccept={() => { setShowDashboardPrompt(false); setShowDashboard(true); }}
+          onDismiss={() => setShowDashboardPrompt(false)}
+        />
       )}
 
       {/* Request Access Modal */}

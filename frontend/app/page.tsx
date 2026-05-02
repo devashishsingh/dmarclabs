@@ -482,27 +482,6 @@ function HowItWorks() {
         </p>
       </div>
 
-      {/* Demo GIF */}
-      <div className="rounded-2xl border border-white/10 bg-card overflow-hidden shadow-2xl">
-        <div className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5 border-b border-white/5 bg-white/[0.02]">
-          <span className="text-[11px] font-semibold uppercase tracking-widest text-text-muted">Live walkthrough</span>
-          <span className="inline-flex items-center gap-1.5 text-[11px] text-text-muted">
-            <span className="h-1.5 w-1.5 rounded-full bg-accent animate-pulse flex-shrink-0" aria-hidden="true" />
-            Upload → Analyze → Results
-          </span>
-        </div>
-        <div className="relative">
-          <div className="absolute inset-0 bg-gradient-to-b from-accent/5 to-transparent pointer-events-none z-10" aria-hidden="true" />
-          <img
-            src="/demo.gif"
-            alt="DMARC Labs demo: drag and drop an XML report, watch it parse and enrich each IP with WHOIS data, then explore the results table"
-            className="w-full h-auto block"
-            loading="lazy"
-            decoding="async"
-          />
-        </div>
-      </div>
-
       {/* 3-step cards */}
       <div className="grid sm:grid-cols-3 gap-3 sm:gap-4">
         {HOW_IT_WORKS.map(({ step, icon: Icon, title, body }) => (

@@ -31,8 +31,15 @@ import { formatBytes, resultsToCSV, downloadCSV } from '@/lib/utils';
 
 type AppState = 'idle' | 'uploading' | 'analyzing' | 'results' | 'error';
 
-const SESSION_TTL_MS = 60 * 60 * 1000; // 1 hour
-const WARN_BEFORE_MS = 10 * 60 * 1000; // warn 10 min before expiry
+const SESSION_TTL_MS = 30 * 60 * 1000; // 30 minutes
+const WARN_BEFORE_MS = 5 * 60 * 1000;  // warn 5 min before expiry
+
+function formatCountdown(ms: number): string {
+  const total = Math.max(0, Math.floor(ms / 1000));
+  const m = Math.floor(total / 60).toString().padStart(2, '0');
+  const s = (total % 60).toString().padStart(2, '0');
+  return `${m}:${s}`;
+}
 
 export default function HomePage() {
   const [appState, setAppState] = useState<AppState>('idle');
@@ -49,6 +56,8 @@ export default function HomePage() {
   const [showDashboard, setShowDashboard] = useState(false);
   const [showDashboardPrompt, setShowDashboardPrompt] = useState(false);
   const [isClearing, setIsClearing] = useState(false);
+  const [sessionExpiresAt, setSessionExpiresAt] = useState<number | null>(null);
+  const [countdown, setCountdown] = useState<number | null>(null);
   const { toasts, dismiss, success: toastSuccess, warning: toastWarning, purge: toastPurge } = useToast();
   const { hideHeader, showHeader } = useHeaderVisibility();
   const purgeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -59,10 +68,14 @@ export default function HomePage() {
     if (warnTimerRef.current) clearTimeout(warnTimerRef.current);
     if (purgeTimerRef.current) clearTimeout(purgeTimerRef.current);
 
+    const expiresAt = Date.now() + SESSION_TTL_MS;
+    setSessionExpiresAt(expiresAt);
+    setCountdown(SESSION_TTL_MS);
+
     warnTimerRef.current = setTimeout(() => {
       toastWarning(
         'Session expiring soon',
-        'Your analysis data will be auto-purged in 10 minutes. Download your CSV now if needed.',
+        'Your analysis data will be auto-purged in 5 minutes. Download your CSV now if needed.',
         0 // sticky
       );
     }, SESSION_TTL_MS - WARN_BEFORE_MS);
@@ -75,6 +88,8 @@ export default function HomePage() {
       );
       setSessionId(null);
       setAnalysisData(null);
+      setSessionExpiresAt(null);
+      setCountdown(null);
       setAppState('idle');
       showHeader();
     }, SESSION_TTL_MS);
@@ -83,9 +98,21 @@ export default function HomePage() {
   const clearPurgeTimers = useCallback(() => {
     if (warnTimerRef.current) clearTimeout(warnTimerRef.current);
     if (purgeTimerRef.current) clearTimeout(purgeTimerRef.current);
+    setSessionExpiresAt(null);
+    setCountdown(null);
   }, []);
 
   useEffect(() => () => clearPurgeTimers(), [clearPurgeTimers]);
+
+  // Live countdown ticker
+  useEffect(() => {
+    if (sessionExpiresAt === null) return;
+    const tick = setInterval(() => {
+      const remaining = sessionExpiresAt - Date.now();
+      setCountdown(remaining > 0 ? remaining : 0);
+    }, 1000);
+    return () => clearInterval(tick);
+  }, [sessionExpiresAt]);
 
   // Listen for logo click reset event from Header
   useEffect(() => {
@@ -183,6 +210,8 @@ export default function HomePage() {
       toastPurge('Session cleared', 'Your data has been deleted from our servers.', 5000);
       setSessionId(null);
       setAnalysisData(null);
+      setSessionExpiresAt(null);
+      setCountdown(null);
       setAppState('idle');
       setErrorMessage(null);
       setIsClearing(false);
@@ -202,6 +231,8 @@ export default function HomePage() {
     clearPurgeTimers();
     setSessionId(null);
     setAnalysisData(null);
+    setSessionExpiresAt(null);
+    setCountdown(null);
     setAppState('idle');
     setErrorMessage(null);
     setUploadProgress(0);
@@ -343,22 +374,39 @@ export default function HomePage() {
       {appState === 'results' && analysisData && (
         <div className="space-y-6">
           {/* Top action bar — Dashboard only */}
-          <div className="flex flex-wrap items-center gap-3">
-            <button
-              onClick={() => setShowDashboard(true)}
-              className="flex items-center gap-2 px-4 py-2 rounded-md bg-accent text-white text-sm font-medium hover:bg-red-500 transition-colors min-h-[40px]"
-              aria-label="Open dashboard view"
-            >
-              <BarChart2 className="h-4 w-4" aria-hidden="true" />
-              Dashboard
-            </button>
-            <p className="text-xs text-text-muted ml-auto">
-              Session expires{' '}
-              {analysisData.expiresAt
-                ? new Date(analysisData.expiresAt).toLocaleTimeString()
-                : 'in 1 hour'}
-            </p>
-          </div>
+          {(() => {
+            const isWarning = countdown !== null && countdown <= WARN_BEFORE_MS;
+            const timerLabel = countdown !== null ? formatCountdown(countdown) : null;
+            return (
+              <div className="flex flex-wrap items-center gap-3">
+                <button
+                  onClick={() => setShowDashboard(true)}
+                  className="flex items-center gap-2 px-4 py-2 rounded-md bg-accent text-white text-sm font-medium hover:bg-red-500 transition-colors min-h-[40px]"
+                  aria-label="Open dashboard view"
+                >
+                  <BarChart2 className="h-4 w-4" aria-hidden="true" />
+                  Dashboard
+                </button>
+                {timerLabel && (
+                  <div className="ml-auto flex items-center gap-1.5">
+                    <Clock className="h-3.5 w-3.5 flex-shrink-0" style={{ color: isWarning ? '#ef233c' : '#6b7280' }} aria-hidden="true" />
+                    <span
+                      className={[
+                        'font-mono text-xs font-semibold tabular-nums',
+                        isWarning ? 'text-[#ef233c] animate-pulse' : 'text-text-muted',
+                      ].join(' ')}
+                      title="Session auto-expires"
+                    >
+                      {timerLabel}
+                    </span>
+                    {isWarning && (
+                      <span className="text-[10px] text-[#ef233c]/80 font-medium">· expires soon</span>
+                    )}
+                  </div>
+                )}
+              </div>
+            );
+          })()}
 
           {/* Summary cards */}
           <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">

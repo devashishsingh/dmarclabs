@@ -80,6 +80,56 @@ const posts = [
     tags: ['IP Intelligence', 'WHOIS'],
     featured: false,
   },
+  {
+    slug: 'dmarc-xml-report-fields-explained',
+    title: 'DMARC XML Report Fields Explained — Complete Field Reference',
+    description:
+      'A plain-English reference for every field in a DMARC aggregate XML report: report_metadata, policy_published, source_ip, disposition, dkim, spf, count, and auth_results.',
+    date: '2025-07-07',
+    readTime: '10 min read',
+    tags: ['Reference', 'XML'],
+    featured: false,
+  },
+  {
+    slug: 'dmarc-report-for-gmail',
+    title: 'How to Read Your Google DMARC Report — Gmail Aggregate Report Guide',
+    description:
+      'Google sends DMARC aggregate reports daily to every domain. Learn what the report contains, how to open the XML, and what your pass rate means for deliverability.',
+    date: '2025-07-08',
+    readTime: '9 min read',
+    tags: ['Gmail', 'Google'],
+    featured: false,
+  },
+  {
+    slug: 'dmarc-fail-but-dkim-pass',
+    title: 'DMARC Failing But DKIM Passes — 5 Root Causes and How to Fix Them',
+    description:
+      'Email failing DMARC even though DKIM passes? The five most common causes — alignment mismatch, forwarding, subdomain policy, wrong selector — and how to diagnose each one.',
+    date: '2025-07-09',
+    readTime: '11 min read',
+    tags: ['DKIM', 'Troubleshooting'],
+    featured: false,
+  },
+  {
+    slug: 'dmarc-rua-vs-ruf',
+    title: 'DMARC rua vs ruf: Aggregate vs Forensic Reports Explained',
+    description:
+      'What is the difference between DMARC rua and ruf? Learn what aggregate and forensic reports contain, their privacy implications, and whether you should configure ruf.',
+    date: '2025-07-10',
+    readTime: '8 min read',
+    tags: ['Reports', 'Privacy'],
+    featured: false,
+  },
+  {
+    slug: 'dmarc-policy-none-quarantine-reject',
+    title: 'DMARC p=none vs p=quarantine vs p=reject — When to Use Each Policy',
+    description:
+      'A practical decision guide for moving through DMARC policy levels safely — with readiness criteria, pct rollout timeline, rollback steps, and real-world timelines.',
+    date: '2025-07-11',
+    readTime: '12 min read',
+    tags: ['Policy', 'Email Security'],
+    featured: false,
+  },
 ];
 
 function formatDate(date: string) {

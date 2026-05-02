@@ -9,6 +9,11 @@ const blogPosts = [
   { slug: 'why-dmarc-tools-fail-large-files', date: '2025-07-04' },
   { slug: 'how-to-read-dmarc-xml-report', date: '2025-07-05' },
   { slug: 'ip-enrichment-email-security-dmarc', date: '2025-07-06' },
+  { slug: 'dmarc-xml-report-fields-explained', date: '2025-07-07' },
+  { slug: 'dmarc-report-for-gmail', date: '2025-07-08' },
+  { slug: 'dmarc-fail-but-dkim-pass', date: '2025-07-09' },
+  { slug: 'dmarc-rua-vs-ruf', date: '2025-07-10' },
+  { slug: 'dmarc-policy-none-quarantine-reject', date: '2025-07-11' },
 ];
 
 export default function sitemap(): MetadataRoute.Sitemap {

@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { X, Shield, AlertTriangle, TrendingUp, Globe, Wifi, BarChart3 } from 'lucide-react';
+import { X, Shield, AlertTriangle, TrendingUp, BarChart3 } from 'lucide-react';
 import {
   PieChart,
   Pie,
@@ -24,9 +24,6 @@ interface DashboardProps {
 
 const ACCENT = '#ef233c';
 const GREEN = '#22c55e';
-const YELLOW = '#eab308';
-const MUTED = '#6b7280';
-const CARD_BG = '#0d0d0d';
 
 const THREAT_COLORS: Record<string, string> = {
   TRUSTED: '#22c55e',
@@ -235,17 +232,17 @@ export default function Dashboard({ records, onClose }: DashboardProps) {
         </div>
 
         {/* Row 1: DMARC Pie + Threat Pie */}
-        <div className="grid sm:grid-cols-2 gap-6">
-          <div className="rounded-2xl border border-white/8 bg-[#0a0a0a] p-5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
+          <div className="rounded-2xl border border-white/8 bg-[#0a0a0a] p-4 sm:p-5">
             <SectionHeading>DMARC Pass vs Fail</SectionHeading>
-            <ResponsiveContainer width="100%" height={220}>
+            <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
                   data={data.dmarcPie}
                   cx="50%"
-                  cy="50%"
-                  innerRadius={55}
-                  outerRadius={90}
+                  cy="45%"
+                  innerRadius={50}
+                  outerRadius={80}
                   paddingAngle={3}
                   dataKey="value"
                 >
@@ -255,24 +252,26 @@ export default function Dashboard({ records, onClose }: DashboardProps) {
                 </Pie>
                 <Tooltip content={<PieTooltip />} />
                 <Legend
+                  iconSize={10}
+                  wrapperStyle={{ fontSize: 12, paddingTop: 8 }}
                   formatter={(value, entry) => (
-                    <span style={{ color: (entry as { color: string }).color, fontSize: 12 }}>{value}</span>
+                    <span style={{ color: (entry as { color: string }).color }}>{value}</span>
                   )}
                 />
               </PieChart>
             </ResponsiveContainer>
           </div>
 
-          <div className="rounded-2xl border border-white/8 bg-[#0a0a0a] p-5">
+          <div className="rounded-2xl border border-white/8 bg-[#0a0a0a] p-4 sm:p-5">
             <SectionHeading>Threat Level Distribution</SectionHeading>
-            <ResponsiveContainer width="100%" height={220}>
+            <ResponsiveContainer width="100%" height={200}>
               <PieChart>
                 <Pie
                   data={data.threatPie}
                   cx="50%"
-                  cy="50%"
-                  innerRadius={55}
-                  outerRadius={90}
+                  cy="45%"
+                  innerRadius={50}
+                  outerRadius={80}
                   paddingAngle={3}
                   dataKey="value"
                 >
@@ -282,8 +281,10 @@ export default function Dashboard({ records, onClose }: DashboardProps) {
                 </Pie>
                 <Tooltip content={<PieTooltip />} />
                 <Legend
+                  iconSize={10}
+                  wrapperStyle={{ fontSize: 12, paddingTop: 8 }}
                   formatter={(value, entry) => (
-                    <span style={{ color: (entry as { color: string }).color, fontSize: 12 }}>{value}</span>
+                    <span style={{ color: (entry as { color: string }).color }}>{value}</span>
                   )}
                 />
               </PieChart>
@@ -291,33 +292,67 @@ export default function Dashboard({ records, onClose }: DashboardProps) {
           </div>
         </div>
 
-        {/* Row 2: Top 10 Most-Hit IPs */}
-        <div className="rounded-2xl border border-white/8 bg-[#0a0a0a] p-5">
+        {/* Row 2: Top 10 Most-Hit IPs — horizontal bars so IP labels have space */}
+        <div className="rounded-2xl border border-white/8 bg-[#0a0a0a] p-4 sm:p-5">
           <SectionHeading>Top 10 Highest Volume Senders</SectionHeading>
-          <ResponsiveContainer width="100%" height={260}>
-            <BarChart data={data.topVolume} margin={{ top: 5, right: 20, left: 0, bottom: 60 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-              <XAxis
+          <ResponsiveContainer width="100%" height={data.topVolume.length * 38 + 40}>
+            <BarChart
+              data={data.topVolume}
+              layout="vertical"
+              margin={{ top: 0, right: 16, left: 8, bottom: 0 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" horizontal={false} />
+              <XAxis type="number" tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} />
+              <YAxis
+                type="category"
                 dataKey="ip"
-                tick={{ fill: '#6b7280', fontSize: 11 }}
-                angle={-35}
-                textAnchor="end"
-                interval={0}
+                width={110}
+                tick={{ fill: '#9ca3af', fontSize: 10, fontFamily: 'monospace' }}
+                axisLine={false}
+                tickLine={false}
               />
-              <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} />
-              <Tooltip content={<BarTooltip />} />
-              <Legend formatter={(v) => <span style={{ color: '#9ca3af', fontSize: 12 }}>{v}</span>} />
-              <Bar dataKey="DMARC Pass" stackId="a" fill={GREEN} radius={[0, 0, 0, 0]} />
-              <Bar dataKey="DMARC Fail" stackId="a" fill={ACCENT} radius={[3, 3, 0, 0]} />
+              <Tooltip content={<BarTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
+              <Legend
+                iconSize={10}
+                wrapperStyle={{ fontSize: 12, paddingTop: 8 }}
+                formatter={(v) => <span style={{ color: '#9ca3af' }}>{v}</span>}
+              />
+              <Bar dataKey="DMARC Pass" stackId="a" fill={GREEN} />
+              <Bar dataKey="DMARC Fail" stackId="a" fill={ACCENT} radius={[0, 3, 3, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>
 
         {/* Row 3: Top DMARC Failing IPs */}
         {data.topFailing.length > 0 && (
-          <div className="rounded-2xl border border-white/8 bg-[#0a0a0a] p-5">
+          <div className="rounded-2xl border border-white/8 bg-[#0a0a0a] p-4 sm:p-5">
             <SectionHeading>Most DMARC-Failing IPs</SectionHeading>
-            <div className="overflow-x-auto">
+            {/* Mobile: horizontal bar chart. Desktop: table */}
+            <div className="block sm:hidden">
+              <ResponsiveContainer width="100%" height={data.topFailing.length * 36 + 40}>
+                <BarChart
+                  data={data.topFailing}
+                  layout="vertical"
+                  margin={{ top: 0, right: 16, left: 8, bottom: 0 }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" horizontal={false} />
+                  <XAxis type="number" tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} />
+                  <YAxis
+                    type="category"
+                    dataKey="ip"
+                    width={110}
+                    tick={{ fill: '#9ca3af', fontSize: 10, fontFamily: 'monospace' }}
+                    axisLine={false}
+                    tickLine={false}
+                  />
+                  <Tooltip content={<BarTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
+                  <Legend iconSize={10} wrapperStyle={{ fontSize: 12, paddingTop: 8 }} formatter={(v) => <span style={{ color: '#9ca3af' }}>{v}</span>} />
+                  <Bar dataKey="Pass" fill={GREEN} />
+                  <Bar dataKey="Fail" fill={ACCENT} radius={[0, 3, 3, 0]} />
+                </BarChart>
+              </ResponsiveContainer>
+            </div>
+            <div className="hidden sm:block overflow-x-auto">
               <table className="w-full text-sm">
                 <thead>
                   <tr className="border-b border-white/5">
@@ -335,7 +370,7 @@ export default function Dashboard({ records, onClose }: DashboardProps) {
                     return (
                       <tr key={i} className="border-b border-white/5 hover:bg-white/[0.02] transition-colors">
                         <td className="py-2.5 px-3 font-mono text-xs text-white">{row.ip}</td>
-                        <td className="py-2.5 px-3 text-xs text-white/60 max-w-[180px] truncate">{row.owner || '—'}</td>
+                        <td className="py-2.5 px-3 text-xs text-white/60 max-w-[200px] truncate">{row.owner || '—'}</td>
                         <td className="py-2.5 px-3 text-right font-mono text-xs text-red-400 font-semibold">{row.Fail.toLocaleString()}</td>
                         <td className="py-2.5 px-3 text-right font-mono text-xs text-green-400">{row.Pass.toLocaleString()}</td>
                         <td className="py-2.5 px-3 text-right">
@@ -360,15 +395,26 @@ export default function Dashboard({ records, onClose }: DashboardProps) {
 
         {/* Row 4: Country Distribution */}
         {data.countryData.length > 1 && (
-          <div className="rounded-2xl border border-white/8 bg-[#0a0a0a] p-5">
+          <div className="rounded-2xl border border-white/8 bg-[#0a0a0a] p-4 sm:p-5">
             <SectionHeading>Email Volume by Country</SectionHeading>
-            <ResponsiveContainer width="100%" height={240}>
-              <BarChart data={data.countryData} margin={{ top: 5, right: 20, left: 0, bottom: 5 }}>
-                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-                <XAxis dataKey="name" tick={{ fill: '#6b7280', fontSize: 11 }} />
-                <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} />
-                <Tooltip content={<BarTooltip />} />
-                <Bar dataKey="Emails" fill={ACCENT} radius={[3, 3, 0, 0]} opacity={0.85} />
+            <ResponsiveContainer width="100%" height={Math.max(200, data.countryData.length * 36 + 40)}>
+              <BarChart
+                data={data.countryData}
+                layout="vertical"
+                margin={{ top: 0, right: 16, left: 8, bottom: 0 }}
+              >
+                <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" horizontal={false} />
+                <XAxis type="number" tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} />
+                <YAxis
+                  type="category"
+                  dataKey="name"
+                  width={90}
+                  tick={{ fill: '#9ca3af', fontSize: 11 }}
+                  axisLine={false}
+                  tickLine={false}
+                />
+                <Tooltip content={<BarTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
+                <Bar dataKey="Emails" fill={ACCENT} radius={[0, 3, 3, 0]} opacity={0.85} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -376,7 +422,7 @@ export default function Dashboard({ records, onClose }: DashboardProps) {
 
         {/* Row 5: Suspicious IPs table */}
         {data.topSuspicious.length > 0 && (
-          <div className="rounded-2xl border border-yellow-500/20 bg-[#0a0a0a] p-5">
+          <div className="rounded-2xl border border-yellow-500/20 bg-[#0a0a0a] p-4 sm:p-5">
             <SectionHeading>Suspicious / Flagged Senders</SectionHeading>
             <div className="overflow-x-auto">
               <table className="w-full text-sm">
@@ -401,24 +447,33 @@ export default function Dashboard({ records, onClose }: DashboardProps) {
           </div>
         )}
 
-        {/* Row 6: SPF vs DKIM Policy */}
-        <div className="rounded-2xl border border-white/8 bg-[#0a0a0a] p-5">
+        {/* Row 6: SPF vs DKIM Policy — horizontal bar chart */}
+        <div className="rounded-2xl border border-white/8 bg-[#0a0a0a] p-4 sm:p-5">
           <SectionHeading>SPF vs DKIM Policy Pass (Top 10 IPs)</SectionHeading>
-          <ResponsiveContainer width="100%" height={240}>
-            <BarChart data={data.spfDkimCompare} margin={{ top: 5, right: 20, left: 0, bottom: 60 }}>
-              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" />
-              <XAxis
+          <ResponsiveContainer width="100%" height={data.spfDkimCompare.length * 44 + 50}>
+            <BarChart
+              data={data.spfDkimCompare}
+              layout="vertical"
+              margin={{ top: 0, right: 16, left: 8, bottom: 0 }}
+            >
+              <CartesianGrid strokeDasharray="3 3" stroke="rgba(255,255,255,0.04)" horizontal={false} />
+              <XAxis type="number" tick={{ fill: '#6b7280', fontSize: 10 }} axisLine={false} tickLine={false} />
+              <YAxis
+                type="category"
                 dataKey="ip"
-                tick={{ fill: '#6b7280', fontSize: 11 }}
-                angle={-35}
-                textAnchor="end"
-                interval={0}
+                width={110}
+                tick={{ fill: '#9ca3af', fontSize: 10, fontFamily: 'monospace' }}
+                axisLine={false}
+                tickLine={false}
               />
-              <YAxis tick={{ fill: '#6b7280', fontSize: 11 }} />
-              <Tooltip content={<BarTooltip />} />
-              <Legend formatter={(v) => <span style={{ color: '#9ca3af', fontSize: 12 }}>{v}</span>} />
-              <Bar dataKey="SPF Policy" fill="#3b82f6" radius={[3, 3, 0, 0]} />
-              <Bar dataKey="DKIM Policy" fill="#8b5cf6" radius={[3, 3, 0, 0]} />
+              <Tooltip content={<BarTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
+              <Legend
+                iconSize={10}
+                wrapperStyle={{ fontSize: 12, paddingTop: 8 }}
+                formatter={(v) => <span style={{ color: '#9ca3af' }}>{v}</span>}
+              />
+              <Bar dataKey="SPF Policy" fill="#3b82f6" radius={[0, 2, 2, 0]} />
+              <Bar dataKey="DKIM Policy" fill="#8b5cf6" radius={[0, 2, 2, 0]} />
             </BarChart>
           </ResponsiveContainer>
         </div>

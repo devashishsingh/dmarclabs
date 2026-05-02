@@ -48,6 +48,7 @@ export default function HomePage() {
   const [oversizeFile, setOversizeFile] = useState<File | null>(null);
   const [showDashboard, setShowDashboard] = useState(false);
   const [showDashboardPrompt, setShowDashboardPrompt] = useState(false);
+  const [isClearing, setIsClearing] = useState(false);
   const { toasts, dismiss, success: toastSuccess, warning: toastWarning, purge: toastPurge } = useToast();
   const { hideHeader, showHeader } = useHeaderVisibility();
   const purgeTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -171,18 +172,20 @@ export default function HomePage() {
   };
 
   const handlePurge = async () => {
-    if (!sessionId) return;
+    if (!sessionId || isClearing) return;
+    setIsClearing(true);
     clearPurgeTimers();
     try {
       await purgeSession(sessionId);
     } catch {
       // Non-critical
     } finally {
-      toastPurge('Data purged', 'Your session data has been deleted from our servers.', 5000);
+      toastPurge('Session cleared', 'Your data has been deleted from our servers.', 5000);
       setSessionId(null);
       setAnalysisData(null);
       setAppState('idle');
       setErrorMessage(null);
+      setIsClearing(false);
       showHeader();
       scrollToUpload();
     }
@@ -339,7 +342,7 @@ export default function HomePage() {
       {/* Results */}
       {appState === 'results' && analysisData && (
         <div className="space-y-6">
-          {/* Top action bar */}
+          {/* Top action bar — Dashboard only */}
           <div className="flex flex-wrap items-center gap-3">
             <button
               onClick={() => setShowDashboard(true)}
@@ -348,30 +351,6 @@ export default function HomePage() {
             >
               <BarChart2 className="h-4 w-4" aria-hidden="true" />
               Dashboard
-            </button>
-            <button
-              onClick={handleDownloadCSV}
-              className="flex items-center gap-2 px-4 py-2 rounded-md border border-border text-text-muted hover:text-text-primary hover:border-accent/50 text-sm transition-colors min-h-[40px]"
-              aria-label="Download results as CSV"
-            >
-              <Download className="h-4 w-4" aria-hidden="true" />
-              Download CSV
-            </button>
-            <button
-              onClick={handleReset}
-              className="flex items-center gap-2 px-4 py-2 rounded-md border border-border text-text-muted hover:text-text-primary hover:border-accent/50 text-sm transition-colors min-h-[40px]"
-              aria-label="Analyze a new file"
-            >
-              <RefreshCw className="h-4 w-4" aria-hidden="true" />
-              New File
-            </button>
-            <button
-              onClick={handlePurge}
-              className="flex items-center gap-2 px-4 py-2 rounded-md border border-error/40 text-error text-sm hover:bg-error/10 transition-colors min-h-[40px]"
-              aria-label="Purge session data"
-            >
-              <Trash2 className="h-4 w-4" aria-hidden="true" />
-              Purge Data
             </button>
             <p className="text-xs text-text-muted ml-auto">
               Session expires{' '}
@@ -392,15 +371,28 @@ export default function HomePage() {
           {/* Results table */}
           <ResultsTable records={analysisData.results} />
 
-          {/* Action bar */}
+          {/* Bottom action bar */}
           <div className="flex flex-wrap items-center gap-3 pt-2">
             <button
               onClick={handlePurge}
-              className="flex items-center gap-2 px-4 py-2 rounded-md border border-error/50 text-error text-sm hover:bg-error/10 transition-colors min-h-[44px]"
-              aria-label="Purge session data"
+              disabled={isClearing}
+              className="flex items-center gap-2 px-4 py-2 rounded-md border border-error/50 text-error text-sm hover:bg-error/10 transition-colors min-h-[44px] disabled:opacity-60 disabled:cursor-not-allowed"
+              aria-label="Clear session data"
             >
-              <Trash2 className="h-4 w-4" aria-hidden="true" />
-              Purge Data
+              {isClearing ? (
+                <>
+                  <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                    <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                    <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                  </svg>
+                  Clearing...
+                </>
+              ) : (
+                <>
+                  <Trash2 className="h-4 w-4" aria-hidden="true" />
+                  Clear Session
+                </>
+              )}
             </button>
 
             <button

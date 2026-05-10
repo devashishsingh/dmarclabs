@@ -21,14 +21,14 @@ export const metadata: Metadata = {
   robots: 'index, follow',
   alternates: {
     canonical:
-      'https://www.dmarclabsds1.xyz/blog/analyze-large-dmarc-xml-reports-securely',
+      'https://dmarclabsds1.xyz/blog/analyze-large-dmarc-xml-reports-securely',
   },
   openGraph: {
     title:
       'How to Analyze Large DMARC XML Reports (200MB+) Securely — Complete Technical Guide',
     description:
       'Learn how to parse large DMARC XML files without upload limits, understand SPF/DKIM alignment, enrich IP data, and protect your email sender reputation.',
-    url: 'https://www.dmarclabsds1.xyz/blog/analyze-large-dmarc-xml-reports-securely',
+    url: 'https://dmarclabsds1.xyz/blog/analyze-large-dmarc-xml-reports-securely',
     siteName: 'DMARC Labs',
     type: 'article',
   },
@@ -105,9 +105,9 @@ const articleJsonLd = {
   description:
     'Complete technical guide to parsing large DMARC XML files, understanding SPF/DKIM alignment, enriching IP data, and fixing email deliverability.',
   author: { '@type': 'Organization', name: 'DMARC Labs' },
-  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://www.dmarclabsds1.xyz' },
+  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://dmarclabsds1.xyz' },
   datePublished: '2025-07-01',
-  url: 'https://www.dmarclabsds1.xyz/blog/analyze-large-dmarc-xml-reports-securely',
+  url: 'https://dmarclabsds1.xyz/blog/analyze-large-dmarc-xml-reports-securely',
 };
 
 export default function Page() {

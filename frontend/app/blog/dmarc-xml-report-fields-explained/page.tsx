@@ -22,13 +22,13 @@ export const metadata: Metadata = {
   ],
   robots: 'index, follow',
   alternates: {
-    canonical: 'https://www.dmarclabsds1.xyz/blog/dmarc-xml-report-fields-explained',
+    canonical: 'https://dmarclabsds1.xyz/blog/dmarc-xml-report-fields-explained',
   },
   openGraph: {
     title: 'DMARC XML Report Fields Explained — Complete Field Reference',
     description:
       'Plain-English reference for every field in a DMARC aggregate XML report. Covers report_metadata, policy_published, source_ip, disposition, dkim, spf, count, and auth_results.',
-    url: 'https://www.dmarclabsds1.xyz/blog/dmarc-xml-report-fields-explained',
+    url: 'https://dmarclabsds1.xyz/blog/dmarc-xml-report-fields-explained',
     siteName: 'DMARC Labs',
     type: 'article',
   },
@@ -90,8 +90,8 @@ const articleJsonLd = {
   datePublished: '2025-07-07',
   dateModified: '2025-07-07',
   author: { '@type': 'Organization', name: 'DMARC Labs' },
-  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://www.dmarclabsds1.xyz' },
-  mainEntityOfPage: 'https://www.dmarclabsds1.xyz/blog/dmarc-xml-report-fields-explained',
+  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://dmarclabsds1.xyz' },
+  mainEntityOfPage: 'https://dmarclabsds1.xyz/blog/dmarc-xml-report-fields-explained',
   wordCount: 2800,
 };
 

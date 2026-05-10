@@ -17,12 +17,12 @@ export const metadata: Metadata = {
     'large DMARC report',
   ],
   robots: 'index, follow',
-  alternates: { canonical: 'https://www.dmarclabsds1.xyz/blog/why-dmarc-tools-fail-large-files' },
+  alternates: { canonical: 'https://dmarclabsds1.xyz/blog/why-dmarc-tools-fail-large-files' },
   openGraph: {
     title: 'Why Most DMARC Tools Fail with Large XML Files',
     description:
       'Technical deep-dive into why DMARC parsers struggle with large files and how browser-native parsing removes those limits.',
-    url: 'https://www.dmarclabsds1.xyz/blog/why-dmarc-tools-fail-large-files',
+    url: 'https://dmarclabsds1.xyz/blog/why-dmarc-tools-fail-large-files',
     siteName: 'DMARC Labs',
     type: 'article',
   },

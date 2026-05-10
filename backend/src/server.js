@@ -23,6 +23,12 @@ app.use(helmet({
 // --- CORS ---
 app.use(corsMiddleware);
 
+// --- Force UTF-8 charset on all responses (prevents emoji/Unicode mojibake) ---
+app.use((req, res, next) => {
+  res.charset = 'utf-8';
+  next();
+});
+
 // --- Trust proxy for Fly.io ---
 app.set('trust proxy', 1);
 

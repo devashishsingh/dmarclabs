@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
 import { submitFeedback } from '@/lib/api';
 
 interface FeedbackProps {
@@ -9,10 +10,15 @@ interface FeedbackProps {
 
 type Sentiment = 'positive' | 'neutral' | 'negative';
 
-const EMOJI_OPTIONS: { sentiment: Sentiment; emoji: string; label: string }[] = [
-  { sentiment: 'positive', emoji: '😍', label: 'Great' },
-  { sentiment: 'neutral', emoji: '😐', label: 'OK' },
-  { sentiment: 'negative', emoji: '😞', label: 'Poor' },
+const EMOJI_OPTIONS: {
+  sentiment: Sentiment;
+  Icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
+  iconClass: string;
+  label: string;
+}[] = [
+  { sentiment: 'positive', Icon: CheckCircle2, iconClass: 'text-success', label: 'Great' },
+  { sentiment: 'neutral', Icon: AlertTriangle, iconClass: 'text-warning', label: 'OK' },
+  { sentiment: 'negative', Icon: XCircle, iconClass: 'text-error', label: 'Poor' },
 ];
 
 const PLACEHOLDER: Record<Sentiment, string> = {
@@ -30,7 +36,7 @@ export default function Feedback({ sessionId }: FeedbackProps) {
   if (submitted) {
     return (
       <p className="text-text-muted text-sm text-center py-2">
-        Thanks for the feedback! 🙏
+        Thanks for the feedback!
       </p>
     );
   }
@@ -58,7 +64,7 @@ export default function Feedback({ sessionId }: FeedbackProps) {
       <p className="text-text-muted text-sm">How was your experience?</p>
 
       <div className="flex gap-4" role="group" aria-label="Feedback rating">
-        {EMOJI_OPTIONS.map(({ sentiment, emoji, label }) => (
+        {EMOJI_OPTIONS.map(({ sentiment, Icon, iconClass, label }) => (
           <button
             key={sentiment}
             onClick={() => handleSelect(sentiment)}
@@ -71,7 +77,7 @@ export default function Feedback({ sessionId }: FeedbackProps) {
                 : 'border-border hover:border-accent/50 hover:bg-card',
             ].join(' ')}
           >
-            <span className="text-2xl" aria-hidden="true">{emoji}</span>
+            <Icon className={`h-7 w-7 ${iconClass}`} aria-hidden />
             <span className="text-xs text-text-muted">{label}</span>
           </button>
         ))}

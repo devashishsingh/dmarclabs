@@ -8,6 +8,16 @@ export default function robots(): MetadataRoute.Robots {
         allow: '/',
         disallow: ['/admin', '/api/'],
       },
+      {
+        userAgent: 'Googlebot',
+        allow: '/',
+        disallow: ['/admin', '/api/'],
+      },
+      {
+        userAgent: 'Bingbot',
+        allow: '/',
+        disallow: ['/admin', '/api/'],
+      },
       // Allow AI crawlers explicitly — improves GEO (Generative Engine Optimization)
       // so tools like ChatGPT, Perplexity, and Gemini can index and cite content
       {
@@ -36,7 +46,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin', '/api/'],
       },
     ],
-    sitemap: 'https://www.dmarclabsds1.xyz/sitemap.xml',
-    host: 'https://www.dmarclabsds1.xyz',
+    sitemap: 'https://dmarclabsds1.xyz/sitemap.xml',
+    host: 'https://dmarclabsds1.xyz',
   };
 }

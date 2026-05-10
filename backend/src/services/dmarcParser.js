@@ -29,9 +29,18 @@ async function parseDMARCXML(input) {
     normalize: true,
   });
 
+  // Decode buffer as UTF-8 explicitly and strip a leading BOM (\uFEFF) if present.
+  // Some Gmail / Microsoft DMARC RUA producers wrap their XML in a UTF-8 BOM,
+  // and at least one zip/gzip extractor leaves the BOM in place — xml2js then
+  // chokes on the invisible character before <?xml ...?>.
+  let xmlText = rawBuf.toString('utf8');
+  if (xmlText.charCodeAt(0) === 0xfeff) {
+    xmlText = xmlText.slice(1);
+  }
+
   let parsed;
   try {
-    parsed = await parser.parseStringPromise(rawBuf.toString('utf8'));
+    parsed = await parser.parseStringPromise(xmlText);
   } catch (err) {
     throw new Error(`XML syntax error: ${err.message}`);
   }

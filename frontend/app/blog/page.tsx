@@ -8,12 +8,12 @@ export const metadata: Metadata = {
     'In-depth guides on DMARC, SPF, DKIM, email security, and deliverability. Learn how to analyze DMARC reports, fix authentication failures, and protect your domain.',
   keywords: ['DMARC', 'SPF', 'DKIM', 'email security', 'deliverability', 'blog'],
   robots: 'index, follow',
-  alternates: { canonical: 'https://www.dmarclabsds1.xyz/blog' },
+  alternates: { canonical: 'https://dmarclabsds1.xyz/blog' },
   openGraph: {
     title: 'DMARC Blog — Guides, Tutorials & Best Practices',
     description:
       'In-depth guides on DMARC, SPF, DKIM, email security, and deliverability.',
-    url: 'https://www.dmarclabsds1.xyz/blog',
+    url: 'https://dmarclabsds1.xyz/blog',
     siteName: 'DMARC Labs',
     type: 'website',
   },

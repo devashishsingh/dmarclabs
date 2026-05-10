@@ -22,13 +22,13 @@ export const metadata: Metadata = {
   ],
   robots: 'index, follow',
   alternates: {
-    canonical: 'https://www.dmarclabsds1.xyz/blog/dmarc-policy-none-quarantine-reject',
+    canonical: 'https://dmarclabsds1.xyz/blog/dmarc-policy-none-quarantine-reject',
   },
   openGraph: {
     title: 'DMARC p=none vs p=quarantine vs p=reject — When to Use Each Policy',
     description:
       'A practical decision guide for moving through DMARC policy levels safely — with readiness criteria, rollback steps, and recommended timelines.',
-    url: 'https://www.dmarclabsds1.xyz/blog/dmarc-policy-none-quarantine-reject',
+    url: 'https://dmarclabsds1.xyz/blog/dmarc-policy-none-quarantine-reject',
     siteName: 'DMARC Labs',
     type: 'article',
   },
@@ -90,8 +90,8 @@ const articleJsonLd = {
   datePublished: '2025-07-11',
   dateModified: '2025-07-11',
   author: { '@type': 'Organization', name: 'DMARC Labs' },
-  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://www.dmarclabsds1.xyz' },
-  mainEntityOfPage: 'https://www.dmarclabsds1.xyz/blog/dmarc-policy-none-quarantine-reject',
+  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://dmarclabsds1.xyz' },
+  mainEntityOfPage: 'https://dmarclabsds1.xyz/blog/dmarc-policy-none-quarantine-reject',
   wordCount: 2900,
 };
 

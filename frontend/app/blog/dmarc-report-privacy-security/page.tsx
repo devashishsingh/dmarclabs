@@ -17,12 +17,12 @@ export const metadata: Metadata = {
     'DMARC data privacy',
   ],
   robots: 'index, follow',
-  alternates: { canonical: 'https://www.dmarclabsds1.xyz/blog/dmarc-report-privacy-security' },
+  alternates: { canonical: 'https://dmarclabsds1.xyz/blog/dmarc-report-privacy-security' },
   openGraph: {
     title: 'DMARC Report Privacy: Why Uploading to SaaS Tools Is Risky',
     description:
       'Your DMARC reports contain sensitive infrastructure data. Understand the privacy risks before uploading.',
-    url: 'https://www.dmarclabsds1.xyz/blog/dmarc-report-privacy-security',
+    url: 'https://dmarclabsds1.xyz/blog/dmarc-report-privacy-security',
     siteName: 'DMARC Labs',
     type: 'article',
   },

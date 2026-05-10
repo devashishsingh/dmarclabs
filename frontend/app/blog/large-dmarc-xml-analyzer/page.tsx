@@ -17,12 +17,12 @@ export const metadata: Metadata = {
     'analyze DMARC without upload',
   ],
   robots: 'index, follow',
-  alternates: { canonical: 'https://www.dmarclabsds1.xyz/blog/large-dmarc-xml-analyzer' },
+  alternates: { canonical: 'https://dmarclabsds1.xyz/blog/large-dmarc-xml-analyzer' },
   openGraph: {
     title: 'The Best Free Tool for Analyzing Large DMARC XML Files',
     description:
       "Most DMARC tools fail on files above 10MB. Here's how browser-native parsing removes those limits.",
-    url: 'https://www.dmarclabsds1.xyz/blog/large-dmarc-xml-analyzer',
+    url: 'https://dmarclabsds1.xyz/blog/large-dmarc-xml-analyzer',
     siteName: 'DMARC Labs',
     type: 'article',
   },

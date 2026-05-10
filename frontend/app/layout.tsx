@@ -12,14 +12,14 @@ export const metadata: Metadata = {
   keywords: ['DMARC', 'email security', 'SPF', 'DKIM', 'XML analyzer', 'WHOIS'],
   robots: 'index, follow',
   alternates: {
-    canonical: 'https://www.dmarclabsds1.xyz',
+    canonical: 'https://dmarclabsds1.xyz',
   },
   openGraph: {
     title: "DMARC Labs — Stop Guessing Who's Sending From Your Domain",
     description: 'Instant DMARC report analysis with WHOIS-enriched sender intelligence. No signup. No credit card. Your data deleted after analysis.',
     type: 'website',
     siteName: 'DMARC Labs',
-    url: 'https://www.dmarclabsds1.xyz',
+    url: 'https://dmarclabsds1.xyz',
   },
   twitter: {
     card: 'summary_large_image',
@@ -32,6 +32,10 @@ export const metadata: Metadata = {
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
     <html lang="en" className="dark">
+      <head>
+        {/* Charset MUST be the first tag inside <head> for browsers to decode bytes correctly. */}
+        <meta charSet="UTF-8" />
+      </head>
       <body>
         <HeaderVisibilityProvider>
         {/* Global background effects */}
@@ -44,7 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <JsonLd
           type="website"
           name="DMARC Labs"
-          url="https://www.dmarclabsds1.xyz"
+          url="https://dmarclabsds1.xyz"
           description="Analyze DMARC aggregate XML reports instantly. Get SPF, DKIM, and IP WHOIS data with zero signup and full privacy."
         />
         <Header />

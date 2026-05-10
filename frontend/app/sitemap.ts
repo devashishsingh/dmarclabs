@@ -1,6 +1,6 @@
 import { MetadataRoute } from 'next';
 
-const SITE_URL = 'https://www.dmarclabsds1.xyz';
+const SITE_URL = 'https://dmarclabsds1.xyz';
 
 const blogPosts = [
   { slug: 'analyze-large-dmarc-xml-reports-securely', date: '2025-07-01' },

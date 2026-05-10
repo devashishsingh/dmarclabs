@@ -1,0 +1,41 @@
+{
+  "$schema": "https://openapi.vercel.sh/vercel.json",
+  "headers": [
+    {
+      "source": "/",
+      "headers": [
+        { "key": "Content-Type", "value": "text/html; charset=UTF-8" }
+      ]
+    },
+    {
+      "source": "/blog/:path*",
+      "headers": [
+        { "key": "Content-Type", "value": "text/html; charset=UTF-8" }
+      ]
+    },
+    {
+      "source": "/contact",
+      "headers": [
+        { "key": "Content-Type", "value": "text/html; charset=UTF-8" }
+      ]
+    },
+    {
+      "source": "/privacy",
+      "headers": [
+        { "key": "Content-Type", "value": "text/html; charset=UTF-8" }
+      ]
+    },
+    {
+      "source": "/admin",
+      "headers": [
+        { "key": "Content-Type", "value": "text/html; charset=UTF-8" }
+      ]
+    },
+    {
+      "source": "/linkedin",
+      "headers": [
+        { "key": "Content-Type", "value": "text/html; charset=UTF-8" }
+      ]
+    }
+  ]
+}

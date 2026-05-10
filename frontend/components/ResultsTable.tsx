@@ -113,12 +113,16 @@ export default function ResultsTable({ records }: ResultsTableProps) {
         </span>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-border">
-      <table className="w-full border-collapse text-xs" aria-label="DMARC analysis results">
+      <div className="overflow-x-auto rounded-lg border border-border" style={{ WebkitOverflowScrolling: 'touch' }}>
+        <p className="sm:hidden text-[10px] text-text-muted px-3 py-1.5 border-b border-border bg-card/50">
+          ← Swipe horizontally to see all columns. The IP column stays fixed.
+        </p>
+      <table className="w-full min-w-[1100px] border-collapse text-xs" aria-label="DMARC analysis results">
         <thead className="bg-card sticky top-0 z-10">
           {/* Group headers */}
           <tr className="border-b border-border/50">
-            <th className={`${groupHeader} text-left`} colSpan={2}>Sender</th>
+            <th className={`${groupHeader} text-left sticky left-0 z-20 bg-card`} colSpan={1}>Sender</th>
+            <th className={groupHeader} colSpan={1}>&nbsp;</th>
             <th className={`${groupHeader} border-l border-white/5`} colSpan={3}>
               <span className="text-accent">DMARC</span> Compliance
             </th>
@@ -133,7 +137,7 @@ export default function ResultsTable({ records }: ResultsTableProps) {
           {/* Sub-headers */}
           <tr className="border-b border-border">
             {/* Sender */}
-            <th className={subHeaderLeft} onClick={() => handleSort('ip')}>
+            <th className={`${subHeaderLeft} sticky left-0 z-20 bg-card`} onClick={() => handleSort('ip')}>
               <span className="inline-flex items-center gap-0.5">IP Address <SortIcon active={sortKey === 'ip'} dir={sortDir} /></span>
             </th>
             <th className={subHeader} onClick={() => handleSort('emailVolume')}>
@@ -176,15 +180,17 @@ export default function ResultsTable({ records }: ResultsTableProps) {
           </tr>
         </thead>
         <tbody>
-          {sorted.map((record, i) => (
+          {sorted.map((record, i) => {
+            const rowBg = i % 2 === 0 ? 'bg-background' : 'bg-[#0a0a0a]';
+            return (
             <tr key={record.ip}
               className={[
                 'group border-t border-border/50 transition-colors',
-                i % 2 === 0 ? 'bg-background' : 'bg-card/30',
+                rowBg,
                 'hover:bg-accent/5',
               ].join(' ')}>
-              {/* IP */}
-              <td className="px-2 py-2 font-mono text-xs text-text-primary max-w-[120px]">
+              {/* IP — sticky on horizontal scroll */}
+              <td className={['px-2 py-2 font-mono text-xs text-text-primary max-w-[140px] sticky left-0 z-10', rowBg, 'group-hover:bg-[#1a0508]'].join(' ')}>
                 <span className="flex items-center min-w-0">
                   <span className="truncate" title={record.ip}>{record.ip}</span>
                   <CopyButton text={record.ip} />
@@ -231,7 +237,8 @@ export default function ResultsTable({ records }: ResultsTableProps) {
                 </span>
               </td>
             </tr>
-          ))}
+            );
+          })}
         </tbody>
       </table>
     </div>

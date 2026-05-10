@@ -379,40 +379,70 @@ export default function HomePage() {
       )}
 
       {/* Results */}
-      {appState === 'results' && analysisData && (
+      {appState === 'results' && analysisData && (() => {
+        const records = analysisData.results;
+        const suspiciousCount = records.filter((r) => r.whois.threatLevel === 'SUSPICIOUS').length;
+        const trustedCount = records.filter((r) => r.whois.threatLevel === 'TRUSTED').length;
+        return (
         <div className="space-y-6">
-          {/* Back to analyzer */}
-          <div className="flex">
-            <a
-              href="/#upload"
-              onClick={(e) => {
-                e.preventDefault();
-                handleReset();
-                if (typeof window !== 'undefined') {
-                  window.location.hash = 'upload';
-                }
-              }}
-              className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-white/10 bg-white/[0.02] text-sm text-text-muted hover:text-text-primary hover:border-white/20 transition-colors min-h-[40px]"
-              aria-label="Analyze another report"
-            >
-              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
-              Analyze another report
-            </a>
-          </div>
-
-          {/* Top action bar — Dashboard only */}
+          {/* Top action bar — Back, CSV, Clear, Dashboard */}
           {(() => {
             const isWarning = countdown !== null && countdown <= WARN_BEFORE_MS;
             const timerLabel = countdown !== null ? formatCountdown(countdown) : null;
             return (
-              <div className="flex flex-wrap items-center gap-3">
+              <div className="flex flex-wrap items-center gap-2 sm:gap-3">
+                <a
+                  href="/#upload"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    handleReset();
+                    if (typeof window !== 'undefined') {
+                      window.location.hash = 'upload';
+                    }
+                  }}
+                  className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-white/10 bg-white/[0.02] text-sm text-text-muted hover:text-text-primary hover:border-white/20 transition-colors min-h-[44px]"
+                  aria-label="Analyze another report"
+                >
+                  <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+                  <span className="hidden sm:inline">Analyze another report</span>
+                  <span className="sm:hidden">New</span>
+                </a>
+                <button
+                  onClick={handleDownloadCSV}
+                  className="flex items-center gap-2 px-4 py-2 rounded-md bg-accent text-white text-sm font-medium hover:bg-accent-hover transition-colors min-h-[44px]"
+                  aria-label="Download results as CSV"
+                >
+                  <Download className="h-4 w-4" aria-hidden="true" />
+                  <span>Download CSV</span>
+                </button>
+                <button
+                  onClick={handlePurge}
+                  disabled={isClearing}
+                  className="flex items-center gap-2 px-4 py-2 rounded-md border border-error/50 text-error text-sm hover:bg-error/10 transition-colors min-h-[44px] disabled:opacity-60 disabled:cursor-not-allowed"
+                  aria-label="Clear session data"
+                >
+                  {isClearing ? (
+                    <>
+                      <svg className="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" aria-hidden="true">
+                        <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
+                        <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8v4a4 4 0 00-4 4H4z" />
+                      </svg>
+                      <span>Clearing…</span>
+                    </>
+                  ) : (
+                    <>
+                      <Trash2 className="h-4 w-4" aria-hidden="true" />
+                      <span>Clear Session</span>
+                    </>
+                  )}
+                </button>
                 <button
                   onClick={() => setShowDashboard(true)}
-                  className="flex items-center gap-2 px-4 py-2 rounded-md bg-accent text-white text-sm font-medium hover:bg-red-500 transition-colors min-h-[40px]"
+                  className="flex items-center gap-2 px-4 py-2 rounded-md border border-white/10 bg-white/[0.02] text-text-secondary text-sm font-medium hover:text-text-primary hover:border-white/20 transition-colors min-h-[44px]"
                   aria-label="Open dashboard view"
                 >
                   <BarChart2 className="h-4 w-4" aria-hidden="true" />
-                  Dashboard
+                  <span>Dashboard</span>
                 </button>
                 {timerLabel && (
                   <div className="ml-auto flex items-center gap-1.5">
@@ -435,12 +465,14 @@ export default function HomePage() {
             );
           })()}
 
-          {/* Summary cards */}
-          <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
-            <SummaryCard label="Total Emails" value={analysisData.summary.totalEmails.toLocaleString()} />
+          {/* Summary cards — 6 stats: 2-col mobile, 3-col tablet, 6-col desktop */}
+          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3 sm:gap-4">
+            <SummaryCard label="Total Messages" value={analysisData.summary.totalEmails.toLocaleString()} />
             <SummaryCard label="DMARC Pass Rate" value={analysisData.summary.dmarcPassRate} highlight />
             <SummaryCard label="Unique IPs" value={String(analysisData.summary.totalIPs)} />
-            <SummaryCard label="Processing Time" value={analysisData.summary.processingTime} />
+            <SummaryCard label="Suspicious" value={String(suspiciousCount)} tone={suspiciousCount > 0 ? 'error' : 'muted'} />
+            <SummaryCard label="Trusted" value={String(trustedCount)} tone="success" />
+            <SummaryCard label="Processing" value={analysisData.summary.processingTime} />
           </div>
 
           {/* Results table */}
@@ -501,21 +533,23 @@ export default function HomePage() {
             <Feedback sessionId={analysisData.sessionId} />
           </div>
 
-          {/* Subtle support line — appears on every generated report */}
-          <p className="text-center text-xs text-text-muted pt-2">
-            Found this useful?{' '}
+          {/* Killer pitch + coffee link */}
+          <p className="text-center text-xs sm:text-sm text-text-secondary pt-2 max-w-2xl mx-auto leading-relaxed">
+            DMARC is a one-time setup, not a $200/month subscription. If this tool saved you from one,{' '}
             <a
               href="https://ko-fi.com/dmarclabs"
               target="_blank"
               rel="noopener noreferrer"
-              className="text-accent hover:text-accent-hover underline underline-offset-4 decoration-dotted transition-colors"
+              className="text-accent hover:text-accent-hover underline underline-offset-4 decoration-dotted transition-colors font-medium"
             >
               <svg viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" className="inline h-3.5 w-3.5 mr-1 -mt-0.5"><path d="M2 21h18v-2H2v2zM20 8h-2V5H4v9c0 2.21 1.79 4 4 4h6c2.21 0 4-1.79 4-4v-3h2c1.11 0 2-.89 2-2V10c0-1.11-.89-2-2-2zm0 3h-2v-1h2v1z" /></svg>
-              Buy me a coffee
+              buy me a coffee
             </a>
+            {' '}— $10 minimum, because good coffee makes better tools.
           </p>
         </div>
-      )}
+        );
+      })()}
 
       {/* Dashboard full-screen overlay */}
       {showDashboard && analysisData && (
@@ -547,11 +581,29 @@ export default function HomePage() {
   );
 }
 
-function SummaryCard({ label, value, highlight }: { label: string; value: string; highlight?: boolean }) {
+function SummaryCard({ label, value, highlight, tone }: { label: string; value: string; highlight?: boolean; tone?: 'success' | 'error' | 'muted' }) {
+  const toneCls =
+    tone === 'success'
+      ? 'text-success'
+      : tone === 'error'
+      ? 'text-error'
+      : tone === 'muted'
+      ? 'text-text-muted'
+      : highlight
+      ? 'text-accent'
+      : 'text-text-primary';
+  const borderCls =
+    tone === 'success'
+      ? 'border-success/30'
+      : tone === 'error'
+      ? 'border-error/30'
+      : highlight
+      ? 'border-accent/30'
+      : 'border-white/10';
   return (
-    <div className={['rounded-xl border bg-card p-4 space-y-1', highlight ? 'border-accent/30' : 'border-white/10'].join(' ')}>
-      <p className="text-xs text-text-muted">{label}</p>
-      <p className={['text-2xl font-bold font-mono tracking-tight', highlight ? 'text-accent' : 'text-text-primary'].join(' ')}>
+    <div className={['rounded-xl border bg-card p-3 sm:p-4 space-y-1', borderCls].join(' ')}>
+      <p className="text-[11px] sm:text-xs text-text-muted leading-tight">{label}</p>
+      <p className={['text-lg sm:text-2xl font-bold font-mono tracking-tight break-all', toneCls].join(' ')}>
         {value}
       </p>
     </div>

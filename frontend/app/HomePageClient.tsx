@@ -263,48 +263,26 @@ export default function HomePage() {
             Parse &amp; analyze your DMARC RUA reports{' '}
             <span className="text-accent">bulk upload, no account, instant download.</span>
           </h1>
-          <p className="text-text-secondary text-base sm:text-lg font-display">
-            Bulk upload &middot; No account &middot; Instant download
-          </p>
           <p className="text-text-muted text-base sm:text-lg max-w-xl leading-relaxed">
             Stop drowning in XML reports and WHOIS lookups.
             DMARC Labs gives you verified sender intelligence in seconds — no signup, no credit card.
           </p>
-          <div className="flex flex-wrap gap-2 sm:gap-3 pt-1">
-            <div className="flex items-center gap-2 text-[12px] sm:text-[13px] font-mono text-text-secondary border border-white/10 rounded-full px-3 sm:px-4 py-1.5 bg-white/[0.03]">
-              <span className="font-bold text-accent">&lt;5s</span> average analysis time
-            </div>
-            <div className="flex items-center gap-2 text-[12px] sm:text-[13px] font-mono text-text-secondary border border-white/10 rounded-full px-3 sm:px-4 py-1.5 bg-white/[0.03]">
-              <span className="font-bold text-text-primary">100%</span> private
-            </div>
-            <div className="flex items-center gap-2 text-[12px] sm:text-[13px] font-mono text-text-secondary border border-white/10 rounded-full px-3 sm:px-4 py-1.5 bg-white/[0.03]">
-              <span className="font-bold text-text-primary">Forever</span> free up to 100 MB
-            </div>
+          <p className="text-text-secondary text-sm sm:text-base max-w-xl leading-relaxed italic">
+            DMARC is a one-time setup. Stop paying monthly for something you check twice a year.
+          </p>
+          <div className="flex flex-wrap items-center gap-4 pt-2">
+            <a
+              href="#upload"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-accent text-white text-base font-semibold hover:bg-accent-hover transition-colors min-h-[48px] shadow-lg shadow-accent/20"
+            >
+              Start analyzing — it&apos;s free
+            </a>
+            <span className="font-mono text-[12px] text-text-muted tracking-tight">
+              1,600+ reports analyzed
+            </span>
           </div>
         </div>
       )}
-
-      {/* Feature pills — shown only on idle */}
-      {appState === 'idle' && (
-        <div className="flex flex-wrap gap-2 sm:gap-3">
-          {[
-            { icon: Lock, text: 'Data deleted after analysis' },
-            { icon: BarChart2, text: 'Export results as CSV' },
-            { icon: Zap, text: 'Typical: <5s for 50 MB' },
-          ].map(({ icon: Icon, text }) => (
-            <span
-              key={text}
-              className="flex items-center gap-2 sm:gap-2.5 text-xs text-text-muted border border-white/10 rounded-full px-3 sm:px-4 py-2 bg-white/[0.02] backdrop-blur-sm"
-            >
-              <Icon className="h-3.5 w-3.5 text-accent flex-shrink-0" aria-hidden="true" />
-              {text}
-            </span>
-          ))}
-        </div>
-      )}
-
-      {/* How It Works — shown only on idle, above upload */}
-      {appState === 'idle' && <HowItWorks />}
 
       {/* Upload zone */}
       {(appState === 'idle' || appState === 'error') && (
@@ -368,6 +346,12 @@ export default function HomePage() {
           </div>
         </div>
       )}
+
+      {/* How It Works — shown only on idle, below upload */}
+      {appState === 'idle' && <HowItWorks />}
+
+      {/* What you'll get — sample report preview */}
+      {appState === 'idle' && <WhatYoullGet />}
 
       {/* Upload progress */}
       {appState === 'uploading' && (
@@ -634,7 +618,7 @@ function HowItWorks() {
         {[
           { icon: Lock, label: 'Zero persistence', desc: 'Files are never written to disk' },
           { icon: ShieldCheck, label: 'GDPR compliant', desc: 'In-memory only, no cookies' },
-          { icon: Clock, label: 'Auto-purge', desc: 'Sessions deleted after 30 min' },
+          { icon: Clock, label: 'Auto-purge', desc: 'Sessions deleted after 1 hour' },
           { icon: Zap, label: 'Sub-5s analysis', desc: 'Parallel WHOIS enrichment' },
         ].map(({ icon: Icon, label, desc }) => (
           <div key={label} className="flex items-start gap-2.5 sm:gap-3 rounded-xl border border-white/5 bg-white/[0.02] px-3 sm:px-4 py-3">
@@ -645,6 +629,123 @@ function HowItWorks() {
             </div>
           </div>
         ))}
+      </div>
+    </section>
+  );
+}
+
+const SAMPLE_ROWS: Array<{
+  ip: string;
+  org: string;
+  country: string;
+  volume: string;
+  spf: 'pass' | 'fail';
+  dkim: 'pass' | 'fail';
+  dmarc: 'pass' | 'fail';
+}> = [
+  { ip: '209.85.220.41',  org: 'Google LLC',          country: 'US', volume: '12,840', spf: 'pass', dkim: 'pass', dmarc: 'pass' },
+  { ip: '40.107.92.84',   org: 'Microsoft Corporation', country: 'US', volume: '4,217',  spf: 'pass', dkim: 'pass', dmarc: 'pass' },
+  { ip: '198.61.254.18',  org: 'SendGrid, Inc.',      country: 'US', volume: '1,956',  spf: 'pass', dkim: 'fail', dmarc: 'pass' },
+  { ip: '185.176.27.214', org: 'Unknown',              country: 'RU', volume: '47',     spf: 'fail', dkim: 'fail', dmarc: 'fail' },
+  { ip: '52.96.182.211',  org: 'Mailchimp',            country: 'US', volume: '923',    spf: 'pass', dkim: 'pass', dmarc: 'pass' },
+];
+
+function ResultPill({ status }: { status: 'pass' | 'fail' }) {
+  const isPass = status === 'pass';
+  return (
+    <span
+      className={[
+        'inline-flex items-center gap-1 rounded-full px-2 py-0.5 text-[10px] font-mono font-semibold uppercase tracking-wide',
+        isPass
+          ? 'bg-success/10 text-success border border-success/30'
+          : 'bg-error/10 text-error border border-error/30',
+      ].join(' ')}
+    >
+      <span className={['h-1 w-1 rounded-full', isPass ? 'bg-success' : 'bg-error'].join(' ')} aria-hidden="true" />
+      {status}
+    </span>
+  );
+}
+
+function WhatYoullGet() {
+  return (
+    <section className="space-y-6 pt-4 border-t border-white/5" aria-labelledby="what-youll-get-heading">
+      <div className="space-y-1">
+        <h2 id="what-youll-get-heading" className="text-xl sm:text-2xl font-semibold font-display text-text-primary tracking-tight">
+          What you&apos;ll get
+        </h2>
+        <p className="text-text-muted text-sm max-w-xl leading-relaxed">
+          Full per-IP breakdown with SPF, DKIM, and DMARC results.
+        </p>
+      </div>
+
+      <div className="relative rounded-2xl border border-white/10 bg-card overflow-hidden shadow-2xl">
+        {/* Sample report preview */}
+        <div aria-hidden="true" className="select-none">
+          <div className="border-b border-white/10 px-4 sm:px-6 py-4 flex flex-wrap items-center gap-3">
+            <span className="text-xs font-mono text-text-muted">SAMPLE REPORT &middot; example.com</span>
+            <span className="ml-auto inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium border border-success/30 bg-success/10 text-success">
+              <span className="h-1.5 w-1.5 rounded-full bg-success" />
+              94.2% DMARC pass rate
+            </span>
+          </div>
+
+          <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 sm:gap-4 px-4 sm:px-6 py-4 border-b border-white/10">
+            {[
+              { label: 'Total Emails', value: '19,983' },
+              { label: 'DMARC Pass Rate', value: '94.2%', highlight: true },
+              { label: 'Unique IPs', value: '47' },
+              { label: 'Processing Time', value: '3.1s' },
+            ].map((c) => (
+              <div key={c.label} className={['rounded-xl border bg-card p-3 space-y-1', c.highlight ? 'border-accent/30' : 'border-white/10'].join(' ')}>
+                <p className="text-[11px] text-text-muted">{c.label}</p>
+                <p className={['text-lg sm:text-xl font-bold font-mono tracking-tight', c.highlight ? 'text-accent' : 'text-text-primary'].join(' ')}>
+                  {c.value}
+                </p>
+              </div>
+            ))}
+          </div>
+
+          <div className="overflow-x-auto">
+            <table className="w-full text-xs sm:text-sm">
+              <thead>
+                <tr className="text-left text-text-muted border-b border-white/10 bg-white/[0.02]">
+                  <th className="px-4 sm:px-6 py-2.5 font-medium">Source IP</th>
+                  <th className="px-4 py-2.5 font-medium">Organisation</th>
+                  <th className="px-4 py-2.5 font-medium">Country</th>
+                  <th className="px-4 py-2.5 font-medium text-right">Volume</th>
+                  <th className="px-4 py-2.5 font-medium">SPF</th>
+                  <th className="px-4 py-2.5 font-medium">DKIM</th>
+                  <th className="px-4 sm:px-6 py-2.5 font-medium">DMARC</th>
+                </tr>
+              </thead>
+              <tbody>
+                {SAMPLE_ROWS.map((r) => (
+                  <tr key={r.ip} className="border-b border-white/5 last:border-b-0">
+                    <td className="px-4 sm:px-6 py-2.5 font-mono text-text-primary">{r.ip}</td>
+                    <td className="px-4 py-2.5 text-text-secondary">{r.org}</td>
+                    <td className="px-4 py-2.5 font-mono text-text-muted">{r.country}</td>
+                    <td className="px-4 py-2.5 font-mono text-right text-text-primary">{r.volume}</td>
+                    <td className="px-4 py-2.5"><ResultPill status={r.spf} /></td>
+                    <td className="px-4 py-2.5"><ResultPill status={r.dkim} /></td>
+                    <td className="px-4 sm:px-6 py-2.5"><ResultPill status={r.dmarc} /></td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
+          </div>
+        </div>
+
+        {/* Dim overlay */}
+        <div className="pointer-events-none absolute inset-0 bg-gradient-to-b from-transparent via-black/30 to-black/70" aria-hidden="true" />
+        <div className="pointer-events-none absolute inset-0 backdrop-blur-[1.5px]" aria-hidden="true" />
+
+        {/* Caption pinned at bottom */}
+        <div className="absolute inset-x-0 bottom-0 px-4 sm:px-6 py-3 text-center">
+          <p className="text-xs sm:text-sm text-text-secondary font-medium">
+            Full per-IP breakdown with SPF, DKIM, and DMARC results.
+          </p>
+        </div>
       </div>
     </section>
   );

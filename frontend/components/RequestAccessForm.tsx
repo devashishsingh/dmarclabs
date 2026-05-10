@@ -94,7 +94,7 @@ export default function RequestAccessForm({ initialFileSizeMB, onClose }: Props)
         ) : (
           <form onSubmit={handleSubmit(onSubmit)} className="px-6 py-5 space-y-4" noValidate>
             <p className="text-text-muted text-sm">
-              Free tier supports up to 200 MB. Fill out this form to request access for larger files.
+              Free tier supports up to 100 MB. Fill out this form to request access for larger files.
             </p>
 
             {/* Name */}

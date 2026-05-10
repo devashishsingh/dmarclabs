@@ -8,12 +8,12 @@ export const metadata: Metadata = {
     'In-depth guides on DMARC, SPF, DKIM, email security, and deliverability. Learn how to analyze DMARC reports, fix authentication failures, and protect your domain.',
   keywords: ['DMARC', 'SPF', 'DKIM', 'email security', 'deliverability', 'blog'],
   robots: 'index, follow',
-  alternates: { canonical: 'https://dmarclabsds1.xyz/blog' },
+  alternates: { canonical: 'https://www.dmarclabsds1.xyz/blog' },
   openGraph: {
     title: 'DMARC Blog — Guides, Tutorials & Best Practices',
     description:
       'In-depth guides on DMARC, SPF, DKIM, email security, and deliverability.',
-    url: 'https://dmarclabsds1.xyz/blog',
+    url: 'https://www.dmarclabsds1.xyz/blog',
     siteName: 'DMARC Labs',
     type: 'website',
   },
@@ -22,7 +22,7 @@ export const metadata: Metadata = {
 const posts = [
   {
     slug: 'analyze-large-dmarc-xml-reports-securely',
-    title: 'How to Analyze Large DMARC XML Reports (200MB+) Securely',
+    title: 'How to Analyze Large DMARC XML Reports (100MB+) Securely',
     description:
       'Learn how to parse large DMARC XML files without upload limits, understand SPF/DKIM alignment, enrich IP data, and protect your email sender reputation — completely free and privacy-first.',
     date: '2025-07-01',

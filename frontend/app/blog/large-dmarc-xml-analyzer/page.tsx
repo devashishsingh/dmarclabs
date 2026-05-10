@@ -17,12 +17,12 @@ export const metadata: Metadata = {
     'analyze DMARC without upload',
   ],
   robots: 'index, follow',
-  alternates: { canonical: 'https://dmarclabsds1.xyz/blog/large-dmarc-xml-analyzer' },
+  alternates: { canonical: 'https://www.dmarclabsds1.xyz/blog/large-dmarc-xml-analyzer' },
   openGraph: {
     title: 'The Best Free Tool for Analyzing Large DMARC XML Files',
     description:
       "Most DMARC tools fail on files above 10MB. Here's how browser-native parsing removes those limits.",
-    url: 'https://dmarclabsds1.xyz/blog/large-dmarc-xml-analyzer',
+    url: 'https://www.dmarclabsds1.xyz/blog/large-dmarc-xml-analyzer',
     siteName: 'DMARC Labs',
     type: 'article',
   },
@@ -106,7 +106,7 @@ export default function Page() {
 
       <H3>What about very large files on low-RAM devices?</H3>
       <P>
-        Parsing a 200MB XML file requires roughly 600–800MB of browser memory at peak
+        Parsing a 100MB XML file requires roughly 600–800MB of browser memory at peak
         (the DOM representation of an XML tree is typically 3–4× the raw file size).
         Modern laptops and desktops handle this without issue. On older mobile devices
         with 2–3GB RAM total, very large files may cause the tab to be killed by the

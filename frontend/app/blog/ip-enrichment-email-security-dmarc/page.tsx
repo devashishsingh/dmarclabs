@@ -18,13 +18,13 @@ export const metadata: Metadata = {
   ],
   robots: 'index, follow',
   alternates: {
-    canonical: 'https://dmarclabsds1.xyz/blog/ip-enrichment-email-security-dmarc',
+    canonical: 'https://www.dmarclabsds1.xyz/blog/ip-enrichment-email-security-dmarc',
   },
   openGraph: {
     title: 'IP Enrichment in DMARC Analysis: Why WHOIS Data Changes Everything',
     description:
       'How WHOIS enrichment transforms raw IP addresses into actionable sender intelligence for DMARC troubleshooting.',
-    url: 'https://dmarclabsds1.xyz/blog/ip-enrichment-email-security-dmarc',
+    url: 'https://www.dmarclabsds1.xyz/blog/ip-enrichment-email-security-dmarc',
     siteName: 'DMARC Labs',
     type: 'article',
   },

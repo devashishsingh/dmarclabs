@@ -6,7 +6,7 @@ export const metadata: Metadata = {
   description:
     'DMARC Labs privacy policy. We process DMARC XML files entirely in-memory and never store your data on disk or share it with third parties.',
   robots: 'index, follow',
-  alternates: { canonical: 'https://dmarclabsds1.xyz/privacy' },
+  alternates: { canonical: 'https://www.dmarclabsds1.xyz/privacy' },
 };
 
 const LAST_UPDATED = 'April 24, 2026';

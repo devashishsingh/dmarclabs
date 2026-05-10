@@ -13,14 +13,14 @@ export const metadata: Metadata = {
     'DMARC aggregate report no login',
   ],
   alternates: {
-    canonical: 'https://dmarclabsds1.xyz/',
+    canonical: 'https://www.dmarclabsds1.xyz/',
   },
   verification: {
     google: 'googlec38bf89a55d491da',
   },
   openGraph: {
     type: 'website',
-    url: 'https://dmarclabsds1.xyz/',
+    url: 'https://www.dmarclabsds1.xyz/',
     title: 'DMARC RUA Report Analyzer — No Login, Files Never Stored',
     description:
       'Bulk upload your DMARC RUA files. Get a comprehensive report instantly. No account, no storage, download and go.',
@@ -37,7 +37,7 @@ const softwareAppSchema = {
   '@context': 'https://schema.org',
   '@type': 'SoftwareApplication',
   name: 'DMARC Labs Report Analyzer',
-  url: 'https://dmarclabsds1.xyz',
+  url: 'https://www.dmarclabsds1.xyz',
   applicationCategory: 'SecurityApplication',
   operatingSystem: 'Web',
   offers: {

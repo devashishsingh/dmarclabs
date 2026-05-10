@@ -21,13 +21,13 @@ export const metadata: Metadata = {
   ],
   robots: 'index, follow',
   alternates: {
-    canonical: 'https://dmarclabsds1.xyz/blog/dmarc-fail-but-dkim-pass',
+    canonical: 'https://www.dmarclabsds1.xyz/blog/dmarc-fail-but-dkim-pass',
   },
   openGraph: {
     title: 'DMARC Failing But DKIM Passes — 5 Root Causes and How to Fix Them',
     description:
       'Email failing DMARC even though DKIM passes? These five causes explain why and how to fix each one.',
-    url: 'https://dmarclabsds1.xyz/blog/dmarc-fail-but-dkim-pass',
+    url: 'https://www.dmarclabsds1.xyz/blog/dmarc-fail-but-dkim-pass',
     siteName: 'DMARC Labs',
     type: 'article',
   },
@@ -89,8 +89,8 @@ const articleJsonLd = {
   datePublished: '2025-07-09',
   dateModified: '2025-07-09',
   author: { '@type': 'Organization', name: 'DMARC Labs' },
-  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://dmarclabsds1.xyz' },
-  mainEntityOfPage: 'https://dmarclabsds1.xyz/blog/dmarc-fail-but-dkim-pass',
+  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://www.dmarclabsds1.xyz' },
+  mainEntityOfPage: 'https://www.dmarclabsds1.xyz/blog/dmarc-fail-but-dkim-pass',
   wordCount: 2700,
 };
 

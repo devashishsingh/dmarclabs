@@ -21,13 +21,13 @@ export const metadata: Metadata = {
   ],
   robots: 'index, follow',
   alternates: {
-    canonical: 'https://dmarclabsds1.xyz/blog/dmarc-rua-vs-ruf',
+    canonical: 'https://www.dmarclabsds1.xyz/blog/dmarc-rua-vs-ruf',
   },
   openGraph: {
     title: 'DMARC rua vs ruf: Aggregate vs Forensic Reports Explained',
     description:
       'What is the difference between DMARC rua and ruf? A plain-English explanation of aggregate and forensic reports, their privacy implications, and when to configure each.',
-    url: 'https://dmarclabsds1.xyz/blog/dmarc-rua-vs-ruf',
+    url: 'https://www.dmarclabsds1.xyz/blog/dmarc-rua-vs-ruf',
     siteName: 'DMARC Labs',
     type: 'article',
   },
@@ -89,8 +89,8 @@ const articleJsonLd = {
   datePublished: '2025-07-10',
   dateModified: '2025-07-10',
   author: { '@type': 'Organization', name: 'DMARC Labs' },
-  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://dmarclabsds1.xyz' },
-  mainEntityOfPage: 'https://dmarclabsds1.xyz/blog/dmarc-rua-vs-ruf',
+  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://www.dmarclabsds1.xyz' },
+  mainEntityOfPage: 'https://www.dmarclabsds1.xyz/blog/dmarc-rua-vs-ruf',
   wordCount: 2400,
 };
 

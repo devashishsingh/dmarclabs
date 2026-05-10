@@ -21,13 +21,13 @@ export const metadata: Metadata = {
   ],
   robots: 'index, follow',
   alternates: {
-    canonical: 'https://dmarclabsds1.xyz/blog/dmarc-report-for-gmail',
+    canonical: 'https://www.dmarclabsds1.xyz/blog/dmarc-report-for-gmail',
   },
   openGraph: {
     title: 'How to Read Your Google DMARC Report — Gmail Aggregate Report Guide',
     description:
       'Google sends DMARC aggregate reports daily to every domain. Learn what the report contains, how to open it, and what your pass rate means.',
-    url: 'https://dmarclabsds1.xyz/blog/dmarc-report-for-gmail',
+    url: 'https://www.dmarclabsds1.xyz/blog/dmarc-report-for-gmail',
     siteName: 'DMARC Labs',
     type: 'article',
   },
@@ -89,8 +89,8 @@ const articleJsonLd = {
   datePublished: '2025-07-08',
   dateModified: '2025-07-08',
   author: { '@type': 'Organization', name: 'DMARC Labs' },
-  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://dmarclabsds1.xyz' },
-  mainEntityOfPage: 'https://dmarclabsds1.xyz/blog/dmarc-report-for-gmail',
+  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://www.dmarclabsds1.xyz' },
+  mainEntityOfPage: 'https://www.dmarclabsds1.xyz/blog/dmarc-report-for-gmail',
   wordCount: 2600,
 };
 

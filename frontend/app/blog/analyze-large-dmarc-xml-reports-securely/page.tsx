@@ -6,7 +6,7 @@ import {
 } from '@/components/blog';
 
 export const metadata: Metadata = {
-  title: 'How to Analyze Large DMARC XML Reports (200MB+) Securely — Complete Technical Guide',
+  title: 'How to Analyze Large DMARC XML Reports (100MB+) Securely — Complete Technical Guide',
   description:
     'Learn how to parse large DMARC XML files without upload limits, understand SPF/DKIM alignment, enrich IP data, and protect your email sender reputation — completely free and privacy-first.',
   keywords: [
@@ -21,14 +21,14 @@ export const metadata: Metadata = {
   robots: 'index, follow',
   alternates: {
     canonical:
-      'https://dmarclabsds1.xyz/blog/analyze-large-dmarc-xml-reports-securely',
+      'https://www.dmarclabsds1.xyz/blog/analyze-large-dmarc-xml-reports-securely',
   },
   openGraph: {
     title:
-      'How to Analyze Large DMARC XML Reports (200MB+) Securely — Complete Technical Guide',
+      'How to Analyze Large DMARC XML Reports (100MB+) Securely — Complete Technical Guide',
     description:
       'Learn how to parse large DMARC XML files without upload limits, understand SPF/DKIM alignment, enrich IP data, and protect your email sender reputation.',
-    url: 'https://dmarclabsds1.xyz/blog/analyze-large-dmarc-xml-reports-securely',
+    url: 'https://www.dmarclabsds1.xyz/blog/analyze-large-dmarc-xml-reports-securely',
     siteName: 'DMARC Labs',
     type: 'article',
   },
@@ -48,7 +48,7 @@ const faqJsonLd = {
     },
     {
       '@type': 'Question',
-      name: 'Why are some DMARC XML files so large (200MB+)?',
+      name: 'Why are some DMARC XML files so large (100MB+)?',
       acceptedAnswer: {
         '@type': 'Answer',
         text: 'DMARC aggregate reports grow large when your domain sends a high volume of email. Each <record> entry in the XML represents a unique combination of source IP, authentication result, and disposition. High-volume senders — especially those using third-party email services like Mailchimp, Salesforce, or transactional email APIs — can accumulate millions of records per reporting period, pushing file sizes into the hundreds of megabytes.',
@@ -59,7 +59,7 @@ const faqJsonLd = {
       name: 'Can I analyze a large DMARC XML file without uploading it to a server?',
       acceptedAnswer: {
         '@type': 'Answer',
-        text: 'Yes. DMARC Labs uses a browser-native XML parser that processes your file entirely on your device. The file is never sent to any server. This approach also removes file-size limits: your browser can process files of any size (limited only by your device RAM), including 200MB+ reports that would overwhelm typical SaaS DMARC tools.',
+        text: 'Yes. DMARC Labs uses a browser-native XML parser that processes your file entirely on your device. The file is never sent to any server. This approach also removes file-size limits: your browser can process files of any size (limited only by your device RAM), including 100MB+ reports that would overwhelm typical SaaS DMARC tools.',
       },
     },
     {
@@ -101,19 +101,19 @@ const articleJsonLd = {
   '@context': 'https://schema.org',
   '@type': 'Article',
   headline:
-    'How to Analyze Large DMARC XML Reports (200MB+) Securely and Fix Email Deliverability',
+    'How to Analyze Large DMARC XML Reports (100MB+) Securely and Fix Email Deliverability',
   description:
     'Complete technical guide to parsing large DMARC XML files, understanding SPF/DKIM alignment, enriching IP data, and fixing email deliverability.',
   author: { '@type': 'Organization', name: 'DMARC Labs' },
-  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://dmarclabsds1.xyz' },
+  publisher: { '@type': 'Organization', name: 'DMARC Labs', url: 'https://www.dmarclabsds1.xyz' },
   datePublished: '2025-07-01',
-  url: 'https://dmarclabsds1.xyz/blog/analyze-large-dmarc-xml-reports-securely',
+  url: 'https://www.dmarclabsds1.xyz/blog/analyze-large-dmarc-xml-reports-securely',
 };
 
 export default function Page() {
   return (
     <BlogPostLayout
-      title="How to Analyze Large DMARC XML Reports (200MB+) Securely and Fix Email Deliverability"
+      title="How to Analyze Large DMARC XML Reports (100MB+) Securely and Fix Email Deliverability"
       description="Learn how to parse large DMARC XML files without upload limits, understand SPF/DKIM alignment, enrich IP data, and protect your email sender reputation — completely free and privacy-first."
       date="2025-07-01"
       readTime="18 min read"
@@ -229,7 +229,7 @@ export default function Page() {
         </LI>
       </UL>
       <P>
-        The result is that production DMARC deployments routinely generate 50MB–200MB+
+        The result is that production DMARC deployments routinely generate 50MB–100MB+
         XML files per reporting period. Most SaaS DMARC tools enforce upload limits of
         10–25MB. Enterprise tiers unlock higher limits but cost hundreds of dollars per
         month.
@@ -685,7 +685,7 @@ export default function Page() {
         DKIM authentication, and how many were handled according to your DMARC policy.
       </P>
 
-      <H3>Why are some DMARC XML files so large (200MB+)?</H3>
+      <H3>Why are some DMARC XML files so large (100MB+)?</H3>
       <P>
         DMARC aggregate reports grow large when your domain sends a high volume of email.
         Each <Code>record</Code> entry represents a unique combination of source IP,
@@ -698,7 +698,7 @@ export default function Page() {
       <P>
         Yes. DMARC Labs uses a browser-native XML parser that processes your file
         entirely on your device. The file is never sent to any server. This removes
-        file-size limits — your browser can process files of any size, including 200MB+
+        file-size limits — your browser can process files of any size, including 100MB+
         reports that would overwhelm typical SaaS DMARC tools.
       </P>
 

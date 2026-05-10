@@ -46,7 +46,7 @@ export default function robots(): MetadataRoute.Robots {
         disallow: ['/admin', '/api/'],
       },
     ],
-    sitemap: 'https://dmarclabsds1.xyz/sitemap.xml',
-    host: 'https://dmarclabsds1.xyz',
+    sitemap: 'https://www.dmarclabsds1.xyz/sitemap.xml',
+    host: 'https://www.dmarclabsds1.xyz',
   };
 }

@@ -85,7 +85,7 @@ export default function BlogPostLayout({
         </p>
         <p className="text-text-muted text-sm mb-4">
           DMARC Labs processes large XML files entirely in your browser — no upload, no
-          signup, no data retention. Supports files up to 200MB+.
+          signup, no data retention. Supports files up to 100MB+.
         </p>
         <Link
           href="/#upload"

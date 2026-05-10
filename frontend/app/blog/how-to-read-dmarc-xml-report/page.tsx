@@ -17,12 +17,12 @@ export const metadata: Metadata = {
     'DMARC XML tutorial',
   ],
   robots: 'index, follow',
-  alternates: { canonical: 'https://dmarclabsds1.xyz/blog/how-to-read-dmarc-xml-report' },
+  alternates: { canonical: 'https://www.dmarclabsds1.xyz/blog/how-to-read-dmarc-xml-report' },
   openGraph: {
     title: 'How to Read a DMARC XML Report: A Field Guide for Email Admins',
     description:
       'Field-by-field guide to understanding DMARC aggregate XML reports, with real examples.',
-    url: 'https://dmarclabsds1.xyz/blog/how-to-read-dmarc-xml-report',
+    url: 'https://www.dmarclabsds1.xyz/blog/how-to-read-dmarc-xml-report',
     siteName: 'DMARC Labs',
     type: 'article',
   },

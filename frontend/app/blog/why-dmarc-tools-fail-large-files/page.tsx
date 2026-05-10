@@ -17,12 +17,12 @@ export const metadata: Metadata = {
     'large DMARC report',
   ],
   robots: 'index, follow',
-  alternates: { canonical: 'https://dmarclabsds1.xyz/blog/why-dmarc-tools-fail-large-files' },
+  alternates: { canonical: 'https://www.dmarclabsds1.xyz/blog/why-dmarc-tools-fail-large-files' },
   openGraph: {
     title: 'Why Most DMARC Tools Fail with Large XML Files',
     description:
       'Technical deep-dive into why DMARC parsers struggle with large files and how browser-native parsing removes those limits.',
-    url: 'https://dmarclabsds1.xyz/blog/why-dmarc-tools-fail-large-files',
+    url: 'https://www.dmarclabsds1.xyz/blog/why-dmarc-tools-fail-large-files',
     siteName: 'DMARC Labs',
     type: 'article',
   },
@@ -57,8 +57,8 @@ export default function Page() {
         Web frameworks impose request body size limits to prevent denial-of-service
         attacks. In Express.js (Node.js), the default body parser limit is{' '}
         <Code>100kb</Code>. Even after increasing it, most tools cap uploads at a few
-        megabytes to control server bandwidth and storage costs. A 200MB file requires
-        200MB to transfer over HTTP — at a typical upload speed of 10 Mbps, that is
+        megabytes to control server bandwidth and storage costs. A 100MB file requires
+        100MB to transfer over HTTP — at a typical upload speed of 10 Mbps, that is
         160 seconds of transfer time before parsing even begins.
       </P>
 

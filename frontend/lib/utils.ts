@@ -142,7 +142,7 @@ export function validateDMARCFile(file: File): string | null {
   if (ext !== '.xml') {
     return `Unsupported file type "${ext}". Please upload a .xml DMARC report.`;
   }
-  const maxBytes = parseInt(process.env.NEXT_PUBLIC_MAX_FILE_SIZE_MB || '200', 10) * 1024 * 1024;
+  const maxBytes = parseInt(process.env.NEXT_PUBLIC_MAX_FILE_SIZE_MB || '100', 10) * 1024 * 1024;
   if (file.size > maxBytes) {
     return `FILE_TOO_LARGE`;
   }

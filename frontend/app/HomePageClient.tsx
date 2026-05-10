@@ -12,6 +12,7 @@ import {
   Clock,
   Globe,
   FileSearch,
+  ArrowLeft,
 } from 'lucide-react';
 import FileUpload from '@/components/FileUpload';
 import ResultsTable from '@/components/ResultsTable';
@@ -396,6 +397,25 @@ export default function HomePage() {
       {/* Results */}
       {appState === 'results' && analysisData && (
         <div className="space-y-6">
+          {/* Back to analyzer */}
+          <div className="flex">
+            <a
+              href="/#upload"
+              onClick={(e) => {
+                e.preventDefault();
+                handleReset();
+                if (typeof window !== 'undefined') {
+                  window.location.hash = 'upload';
+                }
+              }}
+              className="inline-flex items-center gap-2 px-3 py-2 rounded-md border border-white/10 bg-white/[0.02] text-sm text-text-muted hover:text-text-primary hover:border-white/20 transition-colors min-h-[40px]"
+              aria-label="Analyze another report"
+            >
+              <ArrowLeft className="h-4 w-4" aria-hidden="true" />
+              Analyze another report
+            </a>
+          </div>
+
           {/* Top action bar — Dashboard only */}
           {(() => {
             const isWarning = countdown !== null && countdown <= WARN_BEFORE_MS;

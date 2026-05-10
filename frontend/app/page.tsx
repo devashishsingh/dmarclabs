@@ -2,9 +2,9 @@ import type { Metadata } from 'next';
 import HomePageClient from './HomePageClient';
 
 export const metadata: Metadata = {
-  title: 'DMARC RUA Report Analyzer — Bulk Upload, No Login, Files Never Stored | DMARC Labs',
+  title: 'DMARC Labs — Free DMARC RUA Report Analyzer | No Login, Files Never Stored',
   description:
-    'Parse, merge and analyze multiple DMARC RUA XML files instantly. Upload up to 100MB — .gz and .zip supported. No account needed, files never stored. Free single report or $5 for 2 full reports with PDF export.',
+    'Parse, merge and analyze multiple DMARC RUA XML files instantly. Upload up to 100 MB — .gz and .zip supported. No account needed, files never stored. Free single report or $5 for 2 full reports with PDF export.',
   keywords: [
     'DMARC RUA parser',
     'bulk DMARC report analyzer',
@@ -21,7 +21,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     url: 'https://www.dmarclabsds1.xyz/',
-    title: 'DMARC RUA Report Analyzer — No Login, Files Never Stored',
+    title: 'DMARC Labs — Free DMARC RUA Report Analyzer | No Login, Files Never Stored',
     description:
       'Bulk upload your DMARC RUA files. Get a comprehensive report instantly. No account, no storage, download and go.',
     siteName: 'DMARC Labs',

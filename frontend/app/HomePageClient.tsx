@@ -259,21 +259,21 @@ export default function HomePage() {
       {/* Hero */}
       {appState === 'idle' && (
         <div className="space-y-4">
-          <h1 className="text-4xl sm:text-5xl md:text-6xl font-semibold text-text-primary tracking-tight leading-[1.1] font-display">
+          <h1 className="text-2xl sm:text-4xl md:text-5xl lg:text-6xl font-semibold text-text-primary tracking-tight leading-[1.15] sm:leading-[1.1] font-display">
             Parse &amp; analyze your DMARC RUA reports{' '}
             <span className="text-accent">bulk upload, no account, instant download.</span>
           </h1>
-          <p className="text-text-muted text-base sm:text-lg max-w-xl leading-relaxed">
+          <p className="text-text-muted text-sm sm:text-base md:text-lg max-w-xl leading-relaxed">
             Stop drowning in XML reports and WHOIS lookups.
             DMARC Labs gives you verified sender intelligence in seconds — no signup, no credit card.
           </p>
-          <p className="text-text-secondary text-sm sm:text-base max-w-xl leading-relaxed italic">
+          <p className="text-text-secondary text-sm sm:text-base max-w-xl leading-relaxed italic break-words">
             DMARC is a one-time setup. Stop paying monthly for something you check twice a year.
           </p>
-          <div className="flex flex-wrap items-center gap-4 pt-2">
+          <div className="flex flex-wrap items-center gap-3 sm:gap-4 pt-2">
             <a
               href="#upload"
-              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-lg bg-accent text-white text-base font-semibold hover:bg-accent-hover transition-colors min-h-[48px] shadow-lg shadow-accent/20"
+              className="inline-flex w-full sm:w-auto items-center justify-center gap-2 px-6 py-3 rounded-lg bg-accent text-white text-base font-semibold hover:bg-accent-hover transition-colors min-h-[48px] shadow-lg shadow-accent/20"
             >
               Start analyzing — it&apos;s free
             </a>
@@ -325,22 +325,22 @@ export default function HomePage() {
             </button>
           </div>
 
-          {/* Reassurance badges directly below the upload zone */}
-          <div className="flex flex-wrap justify-center gap-2 px-4 pb-4">
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium border border-success/30 bg-success/10 text-success">
-              <span className="h-1.5 w-1.5 rounded-full bg-success" aria-hidden="true" />
+          {/* Reassurance badges directly below the upload zone — 2x2 on mobile, single row on desktop */}
+          <div className="grid grid-cols-2 sm:flex sm:flex-wrap sm:justify-center gap-2 px-4 pb-4">
+            <span className="inline-flex items-center justify-center sm:justify-start gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium border border-success/30 bg-success/10 text-success">
+              <span className="h-1.5 w-1.5 rounded-full bg-success flex-shrink-0" aria-hidden="true" />
               No login required
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium border border-sky-400/30 bg-sky-400/10 text-sky-300">
-              <span className="h-1.5 w-1.5 rounded-full bg-sky-400" aria-hidden="true" />
+            <span className="inline-flex items-center justify-center sm:justify-start gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium border border-sky-400/30 bg-sky-400/10 text-sky-300">
+              <span className="h-1.5 w-1.5 rounded-full bg-sky-400 flex-shrink-0" aria-hidden="true" />
               Files never stored
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium border border-warning/30 bg-warning/10 text-warning">
-              <span className="h-1.5 w-1.5 rounded-full bg-warning" aria-hidden="true" />
+            <span className="inline-flex items-center justify-center sm:justify-start gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium border border-warning/30 bg-warning/10 text-warning">
+              <span className="h-1.5 w-1.5 rounded-full bg-warning flex-shrink-0" aria-hidden="true" />
               Up to 100MB supported
             </span>
-            <span className="inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium border border-white/15 bg-white/5 text-text-secondary">
-              <span className="h-1.5 w-1.5 rounded-full bg-text-muted" aria-hidden="true" />
+            <span className="inline-flex items-center justify-center sm:justify-start gap-1.5 rounded-full px-3 py-1 text-[11px] font-medium border border-white/15 bg-white/5 text-text-secondary">
+              <span className="h-1.5 w-1.5 rounded-full bg-text-muted flex-shrink-0" aria-hidden="true" />
               .gz and .zip accepted
             </span>
           </div>
@@ -613,8 +613,8 @@ function HowItWorks() {
         ))}
       </div>
 
-      {/* Trust signals */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
+      {/* Trust signals — 1 col mobile, 2x2 tablet, 4 across desktop */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-2 sm:gap-3">
         {[
           { icon: Lock, label: 'Zero persistence', desc: 'Files are never written to disk' },
           { icon: ShieldCheck, label: 'GDPR compliant', desc: 'In-memory only, no cookies' },

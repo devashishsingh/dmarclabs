@@ -1,7 +1,7 @@
 'use client';
 
 import { useMemo } from 'react';
-import { X, Shield, AlertTriangle, TrendingUp, BarChart3 } from 'lucide-react';
+import { X, Shield, AlertTriangle, TrendingUp, BarChart3, ArrowLeft } from 'lucide-react';
 import {
   PieChart,
   Pie,
@@ -14,6 +14,7 @@ import {
   YAxis,
   CartesianGrid,
   Legend,
+  LabelList,
 } from 'recharts';
 import type { IPRecord } from '@/lib/api';
 
@@ -24,6 +25,7 @@ interface DashboardProps {
 
 const ACCENT = '#ef233c';
 const GREEN = '#22c55e';
+const CYAN = '#06b6d4';
 
 const THREAT_COLORS: Record<string, string> = {
   TRUSTED: '#22c55e',
@@ -31,6 +33,42 @@ const THREAT_COLORS: Record<string, string> = {
   SUSPICIOUS: '#eab308',
   UNKNOWN: '#3b82f6',
 };
+
+// Country code / alias normalization — visual only, does not affect parsing
+const COUNTRY_ALIASES: Record<string, string> = {
+  US: 'United States', USA: 'United States', 'U.S.': 'United States', 'U.S.A.': 'United States', 'UNITED STATES OF AMERICA': 'United States',
+  UK: 'United Kingdom', GB: 'United Kingdom', 'GREAT BRITAIN': 'United Kingdom',
+  DE: 'Germany', DEU: 'Germany',
+  FR: 'France', FRA: 'France',
+  CA: 'Canada', CAN: 'Canada',
+  AU: 'Australia', AUS: 'Australia',
+  IN: 'India', IND: 'India',
+  JP: 'Japan', JPN: 'Japan',
+  CN: 'China', CHN: 'China',
+  RU: 'Russia', RUS: 'Russia', 'RUSSIAN FEDERATION': 'Russia',
+  NL: 'Netherlands', NLD: 'Netherlands',
+  IE: 'Ireland', IRL: 'Ireland',
+  SG: 'Singapore', SGP: 'Singapore',
+  BR: 'Brazil', BRA: 'Brazil',
+  ES: 'Spain', ESP: 'Spain',
+  IT: 'Italy', ITA: 'Italy',
+  MX: 'Mexico', MEX: 'Mexico',
+  KR: 'South Korea', 'KOREA, REPUBLIC OF': 'South Korea', 'REPUBLIC OF KOREA': 'South Korea',
+  ZA: 'South Africa', RSA: 'South Africa',
+  AE: 'United Arab Emirates', UAE: 'United Arab Emirates',
+};
+
+function normalizeCountry(c: string): string {
+  const trimmed = (c || '').trim();
+  if (!trimmed) return 'Unknown';
+  const upper = trimmed.toUpperCase();
+  if (COUNTRY_ALIASES[upper]) return COUNTRY_ALIASES[upper];
+  // Title-case if it's an all-caps full name
+  if (trimmed === upper && trimmed.length > 3) {
+    return trimmed.toLowerCase().replace(/\b\w/g, (m) => m.toUpperCase());
+  }
+  return trimmed;
+}
 
 // Custom tooltip for pie charts
 function PieTooltip({ active, payload }: { active?: boolean; payload?: { name: string; value: number; payload: { fill: string } }[] }) {
@@ -140,10 +178,10 @@ export default function Dashboard({ records, onClose }: DashboardProps) {
         owner: r.whois.owner,
       }));
 
-    // Country distribution (top 8)
+    // Country distribution (top 8) — normalize aliases (US/USA → United States, etc.)
     const countryCounts: Record<string, number> = {};
     records.forEach((r) => {
-      const c = r.whois.country || 'Unknown';
+      const c = normalizeCountry(r.whois.country || 'Unknown');
       countryCounts[c] = (countryCounts[c] ?? 0) + r.emailVolume;
     });
     const countryData = Object.entries(countryCounts)
@@ -177,14 +215,23 @@ export default function Dashboard({ records, onClose }: DashboardProps) {
   return (
     <div className="fixed inset-0 z-50 flex flex-col bg-black overflow-y-auto">
       {/* Header */}
-      <div className="sticky top-0 z-10 bg-black/90 backdrop-blur-xl border-b border-white/8 px-4 sm:px-8 py-4 flex items-center justify-between">
-        <div className="flex items-center gap-3">
-          <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center">
+      <div className="sticky top-0 z-10 bg-black/90 backdrop-blur-xl border-b border-white/8 px-4 sm:px-8 py-4 flex flex-wrap items-center justify-between gap-3">
+        <div className="flex items-center gap-2 sm:gap-3 min-w-0">
+          <button
+            onClick={onClose}
+            className="flex items-center gap-1.5 px-2.5 sm:px-3 py-2 rounded-lg border border-white/10 text-white/70 hover:text-white hover:border-white/20 text-xs font-medium transition-colors min-h-[40px] flex-shrink-0"
+            aria-label="Back to report"
+          >
+            <ArrowLeft className="h-3.5 w-3.5" aria-hidden="true" />
+            <span className="hidden sm:inline">Back to report</span>
+            <span className="sm:hidden">Back</span>
+          </button>
+          <div className="w-8 h-8 rounded-full bg-accent/10 flex items-center justify-center flex-shrink-0">
             <BarChart3 className="h-4 w-4 text-accent" />
           </div>
-          <div>
-            <h2 className="text-base font-bold font-display text-white">Sender Intelligence Dashboard</h2>
-            <p className="text-[11px] text-white/40">{records.length} IPs · {data.totalEmails.toLocaleString()} emails analysed</p>
+          <div className="min-w-0">
+            <h2 className="text-sm sm:text-base font-bold font-display text-white truncate">Sender Intelligence Dashboard</h2>
+            <p className="text-[11px] text-white/40 truncate">{records.length} IPs · {data.totalEmails.toLocaleString()} emails analysed</p>
           </div>
         </div>
         <button
@@ -414,7 +461,7 @@ export default function Dashboard({ records, onClose }: DashboardProps) {
                   tickLine={false}
                 />
                 <Tooltip content={<BarTooltip />} cursor={{ fill: 'rgba(255,255,255,0.03)' }} />
-                <Bar dataKey="Emails" fill={ACCENT} radius={[0, 3, 3, 0]} opacity={0.85} />
+                <Bar dataKey="Emails" fill={CYAN} radius={[0, 3, 3, 0]} opacity={0.9} />
               </BarChart>
             </ResponsiveContainer>
           </div>
@@ -472,8 +519,12 @@ export default function Dashboard({ records, onClose }: DashboardProps) {
                 wrapperStyle={{ fontSize: 12, paddingTop: 8 }}
                 formatter={(v) => <span style={{ color: '#9ca3af' }}>{v}</span>}
               />
-              <Bar dataKey="SPF Policy" fill="#3b82f6" radius={[0, 2, 2, 0]} />
-              <Bar dataKey="DKIM Policy" fill="#8b5cf6" radius={[0, 2, 2, 0]} />
+              <Bar dataKey="SPF Policy" fill="#3b82f6" radius={[0, 2, 2, 0]} minPointSize={2}>
+                <LabelList dataKey="SPF Policy" position="right" style={{ fill: '#9ca3af', fontSize: 10, fontFamily: 'monospace' }} formatter={(v) => (typeof v === 'number' ? v.toLocaleString() : String(v ?? '0'))} />
+              </Bar>
+              <Bar dataKey="DKIM Policy" fill="#8b5cf6" radius={[0, 2, 2, 0]} minPointSize={2}>
+                <LabelList dataKey="DKIM Policy" position="right" style={{ fill: '#9ca3af', fontSize: 10, fontFamily: 'monospace' }} formatter={(v) => (typeof v === 'number' ? v.toLocaleString() : String(v ?? '0'))} />
+              </Bar>
             </BarChart>
           </ResponsiveContainer>
         </div>

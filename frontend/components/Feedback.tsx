@@ -1,7 +1,7 @@
 'use client';
 
 import { useState } from 'react';
-import { CheckCircle2, AlertTriangle, XCircle } from 'lucide-react';
+import { CheckCircle2, AlertTriangle, XCircle, type LucideIcon } from 'lucide-react';
 import { submitFeedback } from '@/lib/api';
 
 interface FeedbackProps {
@@ -12,7 +12,7 @@ type Sentiment = 'positive' | 'neutral' | 'negative';
 
 const EMOJI_OPTIONS: {
   sentiment: Sentiment;
-  Icon: React.ComponentType<{ className?: string; 'aria-hidden'?: boolean }>;
+  Icon: LucideIcon;
   iconClass: string;
   label: string;
 }[] = [

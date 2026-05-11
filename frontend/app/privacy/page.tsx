@@ -13,14 +13,14 @@ const LAST_UPDATED = 'April 24, 2026';
 
 export default function PrivacyPage() {
   return (
-    <div className="w-full max-w-3xl mx-auto px-6 pt-36 pb-20">
+    <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 pt-28 sm:pt-36 pb-16 sm:pb-20">
       {/* Page header */}
-      <div className="mb-10 space-y-3">
+      <div className="mb-8 sm:mb-10 space-y-3">
         <span className="inline-flex items-center gap-2 text-[11px] font-medium text-text-muted border border-white/10 rounded-full px-3 py-1 bg-white/[0.03]">
           <span className="h-1.5 w-1.5 rounded-full bg-success animate-pulse" />
           Privacy-first by design
         </span>
-        <h1 className="text-4xl font-bold font-display text-text-primary tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold font-display text-text-primary tracking-tight">
           Privacy Policy
         </h1>
         <p className="text-text-muted text-sm">

@@ -28,7 +28,7 @@ export default function BlogPostLayout({
   });
 
   return (
-    <div className="max-w-[760px] mx-auto px-6 pt-32 pb-24">
+    <div className="max-w-[760px] mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-16 sm:pb-24">
       {/* Back link */}
       <Link
         href="/blog"
@@ -53,7 +53,7 @@ export default function BlogPostLayout({
         </div>
 
         {/* Title */}
-        <h1 className="text-3xl md:text-[2.35rem] font-semibold font-display text-text-primary tracking-tight leading-[1.15] mb-5">
+        <h1 className="text-2xl sm:text-3xl md:text-[2.35rem] font-semibold font-display text-text-primary tracking-tight leading-[1.2] sm:leading-[1.15] mb-5 break-words">
           {title}
         </h1>
 

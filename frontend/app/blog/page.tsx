@@ -145,9 +145,9 @@ export default function BlogPage() {
   const rest = posts.filter((p) => !p.featured);
 
   return (
-    <div className="max-w-layout mx-auto px-6 pt-32 pb-24">
+    <div className="max-w-layout mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-16 sm:pb-24">
       {/* Page header */}
-      <div className="max-w-2xl mb-16">
+      <div className="max-w-2xl mb-10 sm:mb-16">
         <div className="flex items-center gap-2 mb-5">
           <span
             className="w-2 h-2 bg-accent rotate-45 flex-shrink-0"
@@ -158,7 +158,7 @@ export default function BlogPage() {
             Blog
           </span>
         </div>
-        <h1 className="text-4xl md:text-5xl font-semibold font-display text-text-primary tracking-tight leading-[1.1] mb-5">
+        <h1 className="text-3xl sm:text-4xl md:text-5xl font-semibold font-display text-text-primary tracking-tight leading-[1.15] sm:leading-[1.1] mb-5">
           DMARC Guides &amp; Tutorials
         </h1>
         <p className="text-text-muted text-[16px] leading-relaxed">
@@ -171,7 +171,7 @@ export default function BlogPage() {
       {featured && (
         <Link
           href={`/blog/${featured.slug}`}
-          className="block group mb-12 p-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:border-accent/30 hover:bg-accent/[0.03] transition-all duration-300"
+          className="block group mb-10 sm:mb-12 p-5 sm:p-8 rounded-2xl border border-white/[0.08] bg-white/[0.02] hover:border-accent/30 hover:bg-accent/[0.03] transition-all duration-300"
         >
           <div className="flex flex-wrap gap-2 mb-4">
             <span className="text-[10px] font-semibold uppercase tracking-widest text-accent bg-accent/10 border border-accent/20 px-2.5 py-1 rounded-full">
@@ -186,14 +186,14 @@ export default function BlogPage() {
               </span>
             ))}
           </div>
-          <h2 className="text-2xl md:text-3xl font-semibold font-display text-text-primary tracking-tight leading-[1.2] mb-4 group-hover:text-accent transition-colors">
+          <h2 className="text-xl sm:text-2xl md:text-3xl font-semibold font-display text-text-primary tracking-tight leading-[1.25] sm:leading-[1.2] mb-4 group-hover:text-accent transition-colors break-words">
             {featured.title}
           </h2>
           <p className="text-text-muted text-[15px] leading-relaxed mb-6 max-w-2xl">
             {featured.description}
           </p>
-          <div className="flex items-center justify-between">
-            <div className="flex gap-5 text-text-muted text-[13px]">
+          <div className="flex flex-wrap items-center justify-between gap-3">
+            <div className="flex flex-wrap gap-x-5 gap-y-2 text-text-muted text-[13px]">
               <span className="flex items-center gap-1.5">
                 <Calendar className="w-3.5 h-3.5" aria-hidden="true" />
                 {formatDate(featured.date)}
@@ -212,12 +212,12 @@ export default function BlogPage() {
       )}
 
       {/* Grid of remaining posts */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
         {rest.map((post) => (
           <Link
             key={post.slug}
             href={`/blog/${post.slug}`}
-            className="group flex flex-col p-6 rounded-xl border border-white/[0.08] bg-white/[0.01] hover:border-accent/25 hover:bg-accent/[0.02] transition-all duration-200"
+            className="group flex flex-col p-5 sm:p-6 rounded-xl border border-white/[0.08] bg-white/[0.01] hover:border-accent/25 hover:bg-accent/[0.02] transition-all duration-200"
           >
             <div className="flex flex-wrap gap-2 mb-3">
               {post.tags.map((tag) => (
@@ -229,7 +229,7 @@ export default function BlogPage() {
                 </span>
               ))}
             </div>
-            <h2 className="text-lg font-semibold font-display text-text-primary tracking-tight leading-[1.3] mb-3 group-hover:text-accent transition-colors flex-1">
+            <h2 className="text-base sm:text-lg font-semibold font-display text-text-primary tracking-tight leading-[1.3] mb-3 group-hover:text-accent transition-colors flex-1 break-words">
               {post.title}
             </h2>
             <p className="text-text-muted text-[14px] leading-relaxed mb-5 line-clamp-2">

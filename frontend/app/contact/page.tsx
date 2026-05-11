@@ -33,14 +33,14 @@ export default function ContactPage() {
   };
 
   return (
-    <div className="w-full max-w-3xl mx-auto px-6 pt-36 pb-20">
+    <div className="w-full max-w-3xl mx-auto px-4 sm:px-6 pt-28 sm:pt-36 pb-16 sm:pb-20">
       {/* Header */}
-      <div className="mb-10 space-y-3">
+      <div className="mb-8 sm:mb-10 space-y-3">
         <span className="inline-flex items-center gap-2 text-[11px] font-medium text-text-muted border border-white/10 rounded-full px-3 py-1 bg-white/[0.03]">
           <span className="w-2 h-2 bg-accent rotate-45 inline-block flex-shrink-0" style={{ boxShadow: '0 0 6px #ef233c' }} />
           We usually respond within 1–2 business days
         </span>
-        <h1 className="text-4xl font-bold font-display text-text-primary tracking-tight">
+        <h1 className="text-3xl sm:text-4xl font-bold font-display text-text-primary tracking-tight">
           Get in touch
         </h1>
         <p className="text-text-muted text-base max-w-lg leading-relaxed">
@@ -48,7 +48,7 @@ export default function ContactPage() {
         </p>
       </div>
 
-      <div className="grid md:grid-cols-5 gap-8">
+      <div className="grid md:grid-cols-5 gap-6 sm:gap-8">
         {/* Contact methods */}
         <aside className="md:col-span-2 space-y-4">
           <div className="rounded-2xl border border-white/10 bg-card p-5 space-y-4">
@@ -159,7 +159,7 @@ export default function ContactPage() {
               <button
                 type="submit"
                 disabled={status === 'sending'}
-                className="w-full flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-all active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
+                className="w-full sm:w-auto sm:min-w-[180px] sm:ml-auto flex items-center justify-center gap-2 px-6 py-3 min-h-[48px] rounded-full bg-accent text-white text-sm font-semibold hover:bg-accent-hover transition-all active:scale-95 disabled:opacity-60 disabled:cursor-not-allowed"
                 style={{ boxShadow: '0 0 20px rgba(239,35,60,0.25)' }}
               >
                 <Send className="h-4 w-4" aria-hidden="true" />

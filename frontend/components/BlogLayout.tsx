@@ -17,7 +17,7 @@ function formatDate(iso: string) {
 
 export default function BlogLayout({ title, date, readingTime, tags, children }: BlogLayoutProps) {
   return (
-    <div className="flex-1 w-full max-w-[720px] mx-auto px-6 pt-32 pb-24">
+    <div className="flex-1 w-full max-w-[720px] mx-auto px-4 sm:px-6 pt-28 sm:pt-32 pb-16 sm:pb-24">
       {/* Back */}
       <Link
         href="/blog"

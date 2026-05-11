@@ -1,9 +1,15 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import Link from 'next/link';
 import './globals.css';
 import Header from '@/components/Header';
 import { HeaderVisibilityProvider } from '@/lib/headerVisibility';
 import JsonLd from '@/components/JsonLd';
+
+export const viewport: Viewport = {
+  width: 'device-width',
+  initialScale: 1,
+  viewportFit: 'cover',
+};
 
 export const metadata: Metadata = {
   title: 'DMARC Labs — Fast, Private, Free DMARC Analyzer',
@@ -55,7 +61,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
         <main id="main-content" className="min-h-screen flex flex-col">
           {children}
         </main>
-        <footer className="border-t border-white/5 py-10 px-6 bg-black/40 backdrop-blur-sm">
+        <footer className="border-t border-white/5 py-10 px-4 sm:px-6 bg-black/40 backdrop-blur-sm">
           <div className="max-w-layout mx-auto space-y-6">
             {/* Top row */}
             <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-6">
